@@ -1,5 +1,8 @@
 # audioverse-android
-Android client browsing the AudioVerse API
+Android client app browsing the [AudioVerse](https://www.audioverse.org/) API
+
+## Screenshots 
+<img src="art/1.png" width="25%" /><img src="art/2.png" width="25%" /><img src="art/3.png" width="25%" /><img src="art/4.png" width="25%" />
 
 This is not an official AudioVerse app, official source can be found [here](https://github.com/AVORG/audioverse-mobile) 
 
