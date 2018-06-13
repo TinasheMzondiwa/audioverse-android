@@ -1,0 +1,71 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.tinashe.audioverse"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "URL_BASE", API_BASE_URL
+        buildConfigField "String", "API_TOKEN", API_TOKEN
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    androidExtensions {
+        experimental = true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
+    implementation "com.google.android.material:material:${versions.material}"
+
+    implementation "androidx.lifecycle:lifecycle-extensions:${versions.arch_comp}"
+    implementation "androidx.lifecycle:lifecycle-runtime:${versions.arch_comp}"
+    kapt "androidx.lifecycle:lifecycle-compiler:${versions.arch_comp}"
+
+    implementation "androidx.room:room-runtime:${versions.arch_comp}"
+    implementation "androidx.room:room-rxjava2:${versions.arch_comp}"
+    kapt "androidx.room:room-compiler:${versions.arch_comp}"
+
+    implementation "androidx.paging:paging-runtime:${versions.arch_comp}"
+    implementation "androidx.paging:paging-rxjava2:${versions.arch_comp}"
+
+    implementation "com.google.dagger:dagger-android:${versions.dagger}"
+    implementation "com.google.dagger:dagger-android-support:${versions.dagger}"
+    kapt "com.google.dagger:dagger-compiler:${versions.dagger}"
+    kapt "com.google.dagger:dagger-android-processor:${versions.dagger}"
+
+    implementation "io.reactivex.rxjava2:rxjava:${versions.rx_java}"
+    implementation "io.reactivex.rxjava2:rxandroid:${versions.rx_android}"
+
+    implementation "com.squareup.okhttp3:okhttp:${versions.okhttp3}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${versions.okhttp3}"
+
+    implementation "com.squareup.retrofit2:retrofit:${versions.retrofit}"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${versions.retrofit}"
+    implementation "com.squareup.retrofit2:converter-gson:${versions.retrofit}"
+
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.18'
+
+    implementation "com.jakewharton.timber:timber:${versions.timber}"
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}

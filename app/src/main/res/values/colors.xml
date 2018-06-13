@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="background">#f5f5f5</color>
+    <color name="dividers">#e0e0e0</color>
+    <color name="deselected">#99303030</color>
+    <color name="deselected_black">#99000000</color>
+    <color name="text">#303030</color>
+    <color name="secondary">#703B4254</color>
+    <color name="theme">#e21f14</color>
+    <color name="icons">#989A9A</color>
+
+</resources>

@@ -1,0 +1,30 @@
+<resources>
+
+    <style name="Theme.AudioVerse.AppBar" parent="@style/ThemeOverlay.MaterialComponents.ActionBar">
+        <item name="colorPrimary">@color/background</item>
+    </style>
+
+    <style name="Theme.AudioVerse.Toolbar" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">@font/sans_bold</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="Theme.AudioVerse.Tab" parent="@style/TextAppearance.MaterialComponents.Tab">
+        <item name="android:fontFamily">@font/sans_bold</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="Theme.AudioVerse.Menu.Active" parent="@style/TextAppearance.MaterialComponents.BottomNavigationView.Colored.Active">
+        <item name="android:fontFamily">@font/sans_bold</item>
+    </style>
+
+    <style name="Theme.AudioVerse.Menu.InActive" parent="@style/TextAppearance.MaterialComponents.BottomNavigationView.Colored">
+        <item name="android:fontFamily">@font/sans_regular</item>
+    </style>
+
+    <style name="expanded" parent="@style/TextAppearance.Design.CollapsingToolbar.Expanded">
+        <item name="android:fontFamily">@font/sans_bold</item>
+    </style>
+
+</resources>

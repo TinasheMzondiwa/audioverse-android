@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav.lists"
+        android:title="@string/my_lists"
+        android:icon="@drawable/file_document_box"
+        android:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/nav.presentations"
+        android:title="@string/presentations"
+        android:icon="@drawable/microphone"
+        android:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/nav.presenters"
+        android:title="@string/presenters"
+        android:icon="@drawable/account_multiple"
+        android:showAsAction="ifRoom" />
+
+</menu>
