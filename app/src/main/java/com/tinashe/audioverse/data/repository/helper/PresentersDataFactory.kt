@@ -6,7 +6,6 @@ import androidx.paging.ItemKeyedDataSource
 import com.tinashe.audioverse.data.api.AudioVerseApi
 import com.tinashe.audioverse.data.database.AudioVerseDb
 import com.tinashe.audioverse.data.model.Presenter
-import timber.log.Timber
 
 class PresentersDataFactory constructor(private val audioVerseApi: AudioVerseApi,
                                         private val audioVerseDb: AudioVerseDb) : DataSource.Factory<Int, Presenter>() {
@@ -46,8 +45,6 @@ class PresentersDataFactory constructor(private val audioVerseApi: AudioVerseApi
         }
 
         override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Presenter>) {
-            //
-            Timber.d("lodBefore")
 
             val response = api.listPresenters().execute()
             if (response.isSuccessful) {
