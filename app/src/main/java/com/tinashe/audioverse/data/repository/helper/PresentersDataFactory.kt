@@ -6,6 +6,8 @@ import androidx.paging.ItemKeyedDataSource
 import com.tinashe.audioverse.data.api.AudioVerseApi
 import com.tinashe.audioverse.data.database.AudioVerseDb
 import com.tinashe.audioverse.data.model.Presenter
+import timber.log.Timber
+import java.io.IOException
 
 class PresentersDataFactory constructor(private val audioVerseApi: AudioVerseApi,
                                         private val audioVerseDb: AudioVerseDb) : DataSource.Factory<Int, Presenter>() {
@@ -28,13 +30,18 @@ class PresentersDataFactory constructor(private val audioVerseApi: AudioVerseApi
 
             if (cache.isEmpty()) {
 
-                val response = api.listPresenters().execute()
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        database.presentersDao().insertAll(it.getPresenterss())
-                        callback.onResult(database.presentersDao().listAllDirect())
+                try {
+                    val response = api.listPresenters().execute()
+                    if (response.isSuccessful) {
+                        response.body()?.let {
+                            database.presentersDao().insertAll(it.getPresenterss())
+                            callback.onResult(database.presentersDao().listAllDirect())
+                        }
                     }
+                } catch (ex: IOException) {
+                    Timber.d(ex, ex.message)
                 }
+
             } else {
                 callback.onResult(cache)
             }

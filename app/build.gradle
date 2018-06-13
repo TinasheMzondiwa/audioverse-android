@@ -16,10 +16,24 @@ android {
         buildConfigField "String", "URL_BASE", API_BASE_URL
         buildConfigField "String", "API_TOKEN", API_TOKEN
     }
+
+    Properties keyProps = new Properties()
+    keyProps.load(new FileInputStream(file("keystore.properties")))
+
+    signingConfigs {
+        release {
+            storeFile file(keyProps['release.keystore'])
+            storePassword keyProps['release.keystore.password']
+            keyAlias keyProps['key.alias']
+            keyPassword keyProps['key.password']
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 
@@ -31,7 +45,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
     implementation "com.google.android.material:material:${versions.material}"
 
     implementation "androidx.lifecycle:lifecycle-extensions:${versions.arch_comp}"
@@ -60,10 +73,10 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:${versions.retrofit}"
     implementation "com.squareup.retrofit2:converter-gson:${versions.retrofit}"
 
+    implementation "com.jakewharton.timber:timber:${versions.timber}"
+
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.18'
-
-    implementation "com.jakewharton.timber:timber:${versions.timber}"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

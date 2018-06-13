@@ -3,8 +3,7 @@
 buildscript {
     // Define Versions in a single place
     ext.versions = [
-            'material'       : '1.0.0-alpha1',
-            'const_layout'   : '1.0.2',
+            'material'       : '1.0.0-alpha3',
             'arch_comp'      : '2.0.0-alpha1',
             'dagger'         : '2.16',
             'kotlin'         : '1.2.41',

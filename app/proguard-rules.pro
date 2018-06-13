@@ -19,3 +19,48 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-ignorewarnings
+-renamesourcefileattribute SourceFile
+-keepattributes *Annotation*,Signature,SourceFile,LineNumberTable
+
+# v7.** get obfuscated. eg. v7.internal.** and v7.widget.** cause errors if obfuscated.
+-keep class android.support.v7.** { *; }
+-keep interface android.support.v7.** { *; }
+-keep class !android.support.v7.internal.view.menu.**,android.support.** {*;}
+
+## Retrofit2
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+-keepclasseswithmembers class * {
+    @retrofit2.http.* <methods>;
+}
+## /Retrofit2
+
+## RxJava
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+   long producerIndex;
+   long consumerIndex;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode producerNode;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode consumerNode;
+}
+## /RxJava
+
+## Dagger
+-dontwarn com.google.errorprone.annotations.*
+
+-keep class com.tinashe.audioverse.data.model.** { *; }
+
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn javax.annotation.**
+-dontwarn org.conscrypt.**
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase

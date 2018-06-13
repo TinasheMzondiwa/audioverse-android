@@ -6,3 +6,6 @@
 /build
 /captures
 .externalNativeBuild
+*.jks
+app/keystore.properties
+app/release/output.json
