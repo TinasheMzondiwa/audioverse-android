@@ -42,6 +42,8 @@
             android:drawableStart="@drawable/microphone_small"
             android:drawablePadding="@dimen/spacing_micro"
             android:fontFamily="@font/sans_regular"
+            android:paddingBottom="@dimen/spacing_micro"
+            android:paddingTop="@dimen/spacing_micro"
             android:textSize="@dimen/text_size_small"
             android:textColor="?android:textColorSecondary"
             tools:text="23" />

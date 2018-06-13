@@ -8,6 +8,8 @@
         <item name="android:navigationBarColor">@color/theme</item>
         <item name="android:textColorPrimary">@color/text</item>
         <item name="android:textColorSecondary">@color/secondary</item>
+        <item name="android:textAppearanceLargePopupMenu">@style/Theme.AudioVerse.PopupMenu.Large</item>
+        <item name="android:textAppearanceSmallPopupMenu">@style/Theme.AudioVerse.PopupMenu.Small</item>
     </style>
 
     <style name="Theme.AudioVerse" parent="BaseTheme" />

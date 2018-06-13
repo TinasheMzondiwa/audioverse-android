@@ -13,6 +13,7 @@ import com.tinashe.audioverse.data.model.RecordingType
 import com.tinashe.audioverse.data.model.Section
 import com.tinashe.audioverse.injection.ViewModelFactory
 import com.tinashe.audioverse.ui.home.tab.vh.RecordingHolder
+import com.tinashe.audioverse.utils.Helper
 import com.tinashe.audioverse.utils.custom.RecyclerSectionItemDecoration
 import com.tinashe.audioverse.utils.custom.UniversalAdapter
 import com.tinashe.audioverse.utils.getViewModel
@@ -107,7 +108,26 @@ class BaseTabFragment : Fragment() {
 
                 recordingsListAdapter = UniversalAdapter(
                         { parent, _ -> RecordingHolder.inflate(parent) },
-                        { vh, _, item -> vh.bind(item, RecordingType.FEATURED) }
+                        { vh, _, item ->
+                            vh.bind(item, RecordingType.FEATURED, object : RecordingHolder.MoreOptions {
+                                override fun play() {
+                                    context?.let {
+                                        Helper.playRecording(it, item)
+                                    }
+                                }
+
+                                override fun share(content: String) {
+                                    activity?.let {
+                                        Helper.shareText(it, content)
+                                    }
+                                }
+
+                                override fun favorite(enabled: Boolean) {
+                                    //TODO: Implement
+                                }
+
+                            })
+                        }
                 )
                 listView.apply {
                     vertical()
@@ -150,15 +170,5 @@ class BaseTabFragment : Fragment() {
         if (listView != null) {
             listView.scrollToPosition(0)
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        viewModel.subscribe()
-    }
-
-    override fun onStop() {
-        viewModel.unSubscribe()
-        super.onStop()
     }
 }

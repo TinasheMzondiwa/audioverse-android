@@ -25,6 +25,16 @@
 
     <style name="expanded" parent="@style/TextAppearance.Design.CollapsingToolbar.Expanded">
         <item name="android:fontFamily">@font/sans_bold</item>
+        <item name="android:lines">2</item>
+        <item name="android:singleLine">false</item>
+    </style>
+
+    <style name="Theme.AudioVerse.PopupMenu.Large" parent="@style/TextAppearance.AppCompat.Widget.PopupMenu.Large">
+        <item name="android:fontFamily">@font/sans_regular</item>
+    </style>
+
+    <style name="Theme.AudioVerse.PopupMenu.Small" parent="@style/TextAppearance.AppCompat.Widget.PopupMenu.Small">
+        <item name="android:fontFamily">@font/sans_regular</item>
     </style>
 
 </resources>
