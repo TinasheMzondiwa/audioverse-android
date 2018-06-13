@@ -9,6 +9,8 @@ This is not an official AudioVerse app, official source can be found [here](http
 ## Building the source
 1. Latest version of Android studio
 2. Contact [AudioVerse](https://github.com/AVORG/audioverse-mobile/blob/master/README.md) technical team to get an api `BASE_URL` and `API_TOKEN`
+### You just want an apk?
+Get the latest release version [here](app/release/app-release.apk)
 
 ## Playback
 This app doesn't have playback functionality yet but will allow you to stream the sermons via other music player apps like [Play Music](https://play.google.com/store/apps/details?id=com.google.android.music) or [VLC](https://play.google.com/store/apps/details?id=org.videolan.vlc)
