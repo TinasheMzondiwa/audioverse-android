@@ -17,7 +17,7 @@ import javax.inject.Inject
 class TabViewModel @Inject constructor(private val repository: AudioVerseRepository,
                                        private val rxSchedulers: RxSchedulers) : RxViewModel() {
 
-    private val sectionHolder = SingleLiveEvent<Section>()
+    val sectionHolder = SingleLiveEvent<Section>()
 
     var presenters: MutableLiveData<PagedList<Presenter>> = MutableLiveData()
     var recordings = MutableLiveData<List<Recording>>()

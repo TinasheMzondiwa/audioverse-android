@@ -1,17 +1,15 @@
 package com.tinashe.audioverse.ui.home
 
-import android.os.Build
 import android.os.Bundle
-import android.view.*
-import androidx.annotation.RequiresApi
-import androidx.coordinatorlayout.widget.CoordinatorLayout
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.AppBarLayout
 import com.tinashe.audioverse.R
 import com.tinashe.audioverse.ui.home.tab.BaseTabFragment
 import com.tinashe.audioverse.utils.hide
 import kotlinx.android.synthetic.main.fragment_tabbed.*
-import timber.log.Timber
 
 class BaseNavigationFragment : Fragment() {
 

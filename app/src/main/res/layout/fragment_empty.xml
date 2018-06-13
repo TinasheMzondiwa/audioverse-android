@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
     android:padding="@dimen/spacing_medium">
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/construction_site" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/lorem"
-        android:fontFamily="@font/sans_regular"
-        android:textColor="?android:textColorPrimary"/>
+        android:layout_margin="@dimen/spacing_large"
+        android:fontFamily="@font/sans_bold"
+        android:gravity="center"
+        android:text="@string/under_construction"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="?android:textColorPrimary" />
 
-</androidx.core.widget.NestedScrollView>
+</FrameLayout>

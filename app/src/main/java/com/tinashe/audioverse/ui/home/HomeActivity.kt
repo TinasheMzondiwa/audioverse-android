@@ -2,6 +2,7 @@ package com.tinashe.audioverse.ui.home
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.tinashe.audioverse.R
 import com.tinashe.audioverse.injection.ViewModelFactory
 import com.tinashe.audioverse.utils.getViewModel
@@ -24,6 +25,15 @@ class HomeActivity : AppCompatActivity() {
         AndroidInjection.inject(this)
 
         viewModel = getViewModel(this, viewModelFactory)
+        viewModel.navigationHolder.observe(this, Observer {
+            it?.let {
+
+                currFragment = BaseNavigationFragment.newInstance(it)
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, currFragment!!)
+                        .commit()
+            }
+        })
 
         navigation.setOnNavigationItemSelectedListener {
 
@@ -33,14 +43,13 @@ class HomeActivity : AppCompatActivity() {
                 return@setOnNavigationItemSelectedListener false
             }
 
-            currFragment = BaseNavigationFragment.newInstance(it.itemId)
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, currFragment!!)
-                    .commit()
+            viewModel.switchNavigation(it.itemId)
 
             return@setOnNavigationItemSelectedListener true
         }
 
-        navigation.selectedItemId = Navigation.PRESENTATIONS
+        viewModel.navigationHolder.value?.let {
+            navigation.selectedItemId = it
+        }
     }
 }

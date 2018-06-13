@@ -21,12 +21,13 @@ import com.tinashe.audioverse.utils.hide
 import com.tinashe.audioverse.utils.vertical
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_list.*
+import timber.log.Timber
 import javax.inject.Inject
 
 class BaseTabFragment : Fragment() {
 
     lateinit var title: String
-    lateinit var section: Section
+    private var section: Section? = null
     private lateinit var sectionHolder: SectionHolder
 
     @Inject
@@ -62,6 +63,10 @@ class BaseTabFragment : Fragment() {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
         viewModel = getViewModel(this, viewModelFactory)
+        section?.let {
+            viewModel.initTab(it)
+        }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -92,63 +97,64 @@ class BaseTabFragment : Fragment() {
             presentersListAdapter.submitList(it)
         })
 
-        viewModel.initTab(section)
+        viewModel.sectionHolder.value?.let {
+            when (it) {
 
-        when (section) {
-
-            Section.MY_LIST_FAVORITES -> {
-            }
-            Section.MY_LIST_PLAY_LISTS -> {
-            }
-            Section.MY_LIST_HISTORY -> {
-            }
-            Section.RECORDINGS_NEW,
-            Section.RECORDINGS_TRENDING,
-            Section.RECORDINGS_FEATURED -> {
-
-                recordingsListAdapter = UniversalAdapter(
-                        { parent, _ -> RecordingHolder.inflate(parent) },
-                        { vh, _, item ->
-                            vh.bind(item, RecordingType.FEATURED, object : RecordingHolder.MoreOptions {
-                                override fun play() {
-                                    context?.let {
-                                        Helper.playRecording(it, item)
-                                    }
-                                }
-
-                                override fun share(content: String) {
-                                    activity?.let {
-                                        Helper.shareText(it, content)
-                                    }
-                                }
-
-                                override fun favorite(enabled: Boolean) {
-                                    //TODO: Implement
-                                }
-
-                            })
-                        }
-                )
-                listView.apply {
-                    vertical()
-                    adapter = recordingsListAdapter
+                Section.MY_LIST_FAVORITES -> {
                 }
-            }
-            Section.PRESENTERS -> {
+                Section.MY_LIST_PLAY_LISTS -> {
+                }
+                Section.MY_LIST_HISTORY -> {
+                }
+                Section.RECORDINGS_NEW,
+                Section.RECORDINGS_TRENDING,
+                Section.RECORDINGS_FEATURED -> {
 
-                presentersListAdapter = PresenterListAdapter()
-                presentersListAdapter.setHasStableIds(true)
+                    recordingsListAdapter = UniversalAdapter(
+                            { parent, _ -> RecordingHolder.inflate(parent) },
+                            { vh, _, item ->
+                                vh.bind(item, RecordingType.FEATURED, object : RecordingHolder.MoreOptions {
+                                    override fun play() {
+                                        context?.let {
+                                            Helper.playRecording(it, item)
+                                        }
+                                    }
 
-                sectionHolder = SectionHolder()
-                val sectionItemDecoration = RecyclerSectionItemDecoration(resources.getDimensionPixelSize(R.dimen.header), true, sectionHolder)
+                                    override fun share(content: String) {
+                                        activity?.let {
+                                            Helper.shareText(it, content)
+                                        }
+                                    }
 
-                listView.apply {
-                    vertical()
-                    addItemDecoration(sectionItemDecoration)
-                    adapter = presentersListAdapter
+                                    override fun favorite(enabled: Boolean) {
+                                        //TODO: Implement
+                                    }
+
+                                })
+                            }
+                    )
+                    listView.apply {
+                        vertical()
+                        adapter = recordingsListAdapter
+                    }
+                }
+                Section.PRESENTERS -> {
+
+                    presentersListAdapter = PresenterListAdapter()
+                    presentersListAdapter.setHasStableIds(true)
+
+                    sectionHolder = SectionHolder()
+                    val sectionItemDecoration = RecyclerSectionItemDecoration(resources.getDimensionPixelSize(R.dimen.header), true, sectionHolder)
+
+                    listView.apply {
+                        vertical()
+                        addItemDecoration(sectionItemDecoration)
+                        adapter = presentersListAdapter
+                    }
                 }
             }
         }
+
     }
 
     class SectionHolder : RecyclerSectionItemDecoration.SectionCallback {

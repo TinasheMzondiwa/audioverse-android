@@ -73,6 +73,8 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:${versions.retrofit}"
     implementation "com.squareup.retrofit2:converter-gson:${versions.retrofit}"
 
+    implementation "com.airbnb.android:lottie:${versions.lottie}"
+
     implementation "com.jakewharton.timber:timber:${versions.timber}"
 
     implementation 'com.squareup.picasso:picasso:2.71828'
