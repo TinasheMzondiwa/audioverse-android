@@ -1,11 +1,15 @@
 package com.tinashe.audioverse.ui.presenter
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import com.squareup.picasso.Picasso
 import com.tinashe.audioverse.R
@@ -65,6 +69,8 @@ class PresenterActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun initPresenter(presenter: Presenter) {
+        ViewCompat.setTransitionName(avatar, TRANSITION_SHARED_ELEMENT)
+
         title = presenter.displayName
 
         Picasso.get()
@@ -112,11 +118,24 @@ class PresenterActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        supportFinishAfterTransition()
+    }
+
     companion object {
-        fun view(context: Context, presenter: Presenter) {
+
+        private const val TRANSITION_SHARED_ELEMENT = "image:shared_element_transition"
+
+        fun view(context: Activity, presenter: Presenter, sharedElement: View) {
+            ViewCompat.setTransitionName(sharedElement, TRANSITION_SHARED_ELEMENT)
+
             val intent = Intent(context, PresenterActivity::class.java)
             intent.putExtra(BundledExtras.PRESENTER, presenter)
-            context.startActivity(intent)
+
+            val options = ActivityOptionsCompat
+                    .makeSceneTransitionAnimation(context, sharedElement, TRANSITION_SHARED_ELEMENT)
+
+            ActivityCompat.startActivity(context, intent, options.toBundle())
         }
     }
 }

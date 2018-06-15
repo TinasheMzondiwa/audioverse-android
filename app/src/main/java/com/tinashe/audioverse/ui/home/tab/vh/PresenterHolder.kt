@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.tinashe.audioverse.R
 import com.tinashe.audioverse.data.model.Presenter
-import com.tinashe.audioverse.ui.presenter.PresenterActivity
 import com.tinashe.audioverse.utils.custom.PicassoCircleTransform
 import com.tinashe.audioverse.utils.inflateView
 import kotlinx.android.extensions.LayoutContainer
@@ -20,7 +19,7 @@ class PresenterHolder constructor(override val containerView: View) :
                 PresenterHolder = PresenterHolder(inflateView(R.layout.presenter_item, parent, false))
     }
 
-    fun bind(presenter: Presenter) {
+    fun bind(presenter: Presenter, callback: (Presenter, View) -> Unit) {
         name.text = presenter.displayName
         count.text = presenter.recordingCount.toString()
 
@@ -32,7 +31,7 @@ class PresenterHolder constructor(override val containerView: View) :
                 .into(avatar)
 
         itemView.setOnClickListener {
-            PresenterActivity.view(it.context, presenter)
+            callback.invoke(presenter, avatar)
         }
     }
 }

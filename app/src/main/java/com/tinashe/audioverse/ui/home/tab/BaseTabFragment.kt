@@ -13,6 +13,7 @@ import com.tinashe.audioverse.data.model.RecordingType
 import com.tinashe.audioverse.data.model.Section
 import com.tinashe.audioverse.injection.ViewModelFactory
 import com.tinashe.audioverse.ui.home.tab.vh.RecordingHolder
+import com.tinashe.audioverse.ui.presenter.PresenterActivity
 import com.tinashe.audioverse.utils.Helper
 import com.tinashe.audioverse.utils.custom.RecyclerSectionItemDecoration
 import com.tinashe.audioverse.utils.custom.UniversalAdapter
@@ -21,7 +22,6 @@ import com.tinashe.audioverse.utils.hide
 import com.tinashe.audioverse.utils.vertical
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_list.*
-import timber.log.Timber
 import javax.inject.Inject
 
 class BaseTabFragment : Fragment() {
@@ -140,7 +140,10 @@ class BaseTabFragment : Fragment() {
                 }
                 Section.PRESENTERS -> {
 
-                    presentersListAdapter = PresenterListAdapter()
+                    presentersListAdapter = PresenterListAdapter { presenter, view ->
+                        PresenterActivity.view(activity!!, presenter, view)
+                    }
+
                     presentersListAdapter.setHasStableIds(true)
 
                     sectionHolder = SectionHolder()

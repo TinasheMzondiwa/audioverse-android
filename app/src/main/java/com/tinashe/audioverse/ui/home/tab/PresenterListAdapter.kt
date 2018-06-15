@@ -1,5 +1,6 @@
 package com.tinashe.audioverse.ui.home.tab
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -7,7 +8,7 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import com.tinashe.audioverse.data.model.Presenter
 import com.tinashe.audioverse.ui.home.tab.vh.PresenterHolder
 
-class PresenterListAdapter : PagedListAdapter<Presenter, PresenterHolder>(PRESENTER_COMPARATOR),
+class PresenterListAdapter constructor(private val callback: (Presenter, View) -> Unit) : PagedListAdapter<Presenter, PresenterHolder>(PRESENTER_COMPARATOR),
         FastScrollRecyclerView.SectionedAdapter {
 
     override fun getItemId(position: Int): Long {
@@ -24,7 +25,7 @@ class PresenterListAdapter : PagedListAdapter<Presenter, PresenterHolder>(PRESEN
 
     override fun onBindViewHolder(holder: PresenterHolder, position: Int) {
         getItem(position)?.let {
-            holder.bind(it)
+            holder.bind(it, callback)
         }
     }
 

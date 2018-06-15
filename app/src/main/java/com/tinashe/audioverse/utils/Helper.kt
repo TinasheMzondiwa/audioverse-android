@@ -13,7 +13,7 @@ import java.util.*
 
 object Helper {
 
-    private const val DAY_FORMAT = "dd-mm-yyy"
+    private const val DAY_FORMAT = "dd-MM-yyyy"
 
     fun formatDuration(duration: String): String {
         if (duration.isEmpty()) {
