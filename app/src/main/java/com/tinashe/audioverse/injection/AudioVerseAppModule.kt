@@ -1,7 +1,6 @@
 package com.tinashe.audioverse.injection
 
 import android.content.Context
-import androidx.room.Room
 import com.tinashe.audioverse.AudioVerseApp
 import com.tinashe.audioverse.data.api.AudioVerseApi
 import com.tinashe.audioverse.data.api.RestClient
@@ -30,10 +29,7 @@ internal class AudioVerseAppModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(context: Context): AudioVerseDb = Room.databaseBuilder(context,
-            AudioVerseDb::class.java, AudioVerseDb.DATABASE_NAME)
-            .fallbackToDestructiveMigration()
-            .build()
+    fun provideDatabase(context: Context): AudioVerseDb = AudioVerseDb.create(context)
 
     @Provides
     @Singleton

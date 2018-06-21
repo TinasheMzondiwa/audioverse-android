@@ -4,12 +4,13 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 import java.util.*
 
 @Entity(tableName = "recordings", indices = [(Index(value = ["title"])), (Index(value = ["description"]))])
 data class Recording(
         @PrimaryKey
-        val id: String) {
+        val id: String) : SearchItem, Serializable {
 
     var sponsorId: String? = ""
 

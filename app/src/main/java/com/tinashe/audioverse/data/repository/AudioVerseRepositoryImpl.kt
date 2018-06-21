@@ -7,6 +7,7 @@ import com.tinashe.audioverse.data.database.AudioVerseDb
 import com.tinashe.audioverse.data.model.Presenter
 import com.tinashe.audioverse.data.model.Recording
 import com.tinashe.audioverse.data.model.RecordingType
+import com.tinashe.audioverse.data.model.SearchResult
 import com.tinashe.audioverse.data.repository.helper.PresentersDataFactory
 import com.tinashe.audioverse.utils.Helper
 import com.tinashe.audioverse.utils.RxSchedulers
@@ -14,6 +15,7 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 
 class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerseApi,
                                            private val audioVerseDb: AudioVerseDb,
@@ -103,4 +105,11 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
         return Observable.merge(db, apiResponse)
     }
 
+    override fun searchFor(query: String): Flowable<SearchResult> {
+
+        val searchTerm = "%$query%"
+
+        return Flowable.zip(audioVerseDb.recordingsDao().search(searchTerm), audioVerseDb.presentersDao().search(searchTerm),
+                BiFunction { recordings, presenters -> SearchResult(recordings, presenters) })
+    }
 }

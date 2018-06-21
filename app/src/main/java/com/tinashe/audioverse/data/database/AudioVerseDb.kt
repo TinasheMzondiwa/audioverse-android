@@ -1,6 +1,8 @@
 package com.tinashe.audioverse.data.database
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.tinashe.audioverse.data.database.dao.PresentersDao
@@ -17,6 +19,11 @@ abstract class AudioVerseDb : RoomDatabase() {
     abstract fun presentersDao(): PresentersDao
 
     companion object {
-        const val DATABASE_NAME = "audion_verse_db"
+        private const val DATABASE_NAME = "audio_verse_db"
+
+        fun create(context: Context): AudioVerseDb = Room.databaseBuilder(context,
+                AudioVerseDb::class.java, DATABASE_NAME)
+                .fallbackToDestructiveMigration()
+                .build()
     }
 }

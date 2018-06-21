@@ -6,7 +6,7 @@ buildscript {
             'material'       : '1.0.0-alpha3',
             'arch_comp'      : '2.0.0-alpha1',
             'dagger'         : '2.16',
-            'kotlin'         : '1.2.41',
+            'kotlin'         : '1.2.50',
             'rx_java'        : '2.1.5',
             'rx_android'     : '2.0.2',
             'glide'          : '4.7.1',

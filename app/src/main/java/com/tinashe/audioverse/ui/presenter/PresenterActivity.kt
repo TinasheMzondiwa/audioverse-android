@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
@@ -18,6 +16,7 @@ import com.tinashe.audioverse.data.model.Presenter
 import com.tinashe.audioverse.data.model.Recording
 import com.tinashe.audioverse.data.model.RecordingType
 import com.tinashe.audioverse.injection.ViewModelFactory
+import com.tinashe.audioverse.ui.base.BaseActivity
 import com.tinashe.audioverse.ui.home.tab.vh.RecordingHolder
 import com.tinashe.audioverse.utils.*
 import com.tinashe.audioverse.utils.custom.PicassoCircleTransform
@@ -26,7 +25,7 @@ import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_presenter.*
 import javax.inject.Inject
 
-class PresenterActivity : AppCompatActivity() {
+class PresenterActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -80,13 +79,13 @@ class PresenterActivity : AppCompatActivity() {
                 .transform(PicassoCircleTransform())
                 .into(avatar)
 
-        about.text = "${presenter.description}\n${presenter.website}"
+        about.text = "${presenter.description}\n${presenter.website}".trim()
 
         listAdapter = UniversalAdapter(
                 { parent, _ -> RecordingHolder.inflate(parent) },
                 { vh, _, item ->
                     vh.bind(item, RecordingType.PRESENTER, object : RecordingHolder.MoreOptions {
-                        override fun play() {
+                        override fun play(item: Recording) {
                             Helper.playRecording(this@PresenterActivity, item)
                         }
 
@@ -108,19 +107,6 @@ class PresenterActivity : AppCompatActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
-            android.R.id.home -> {
-                supportFinishAfterTransition()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onBackPressed() {
-        supportFinishAfterTransition()
-    }
 
     companion object {
 

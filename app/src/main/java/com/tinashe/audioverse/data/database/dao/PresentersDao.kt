@@ -22,4 +22,7 @@ interface PresentersDao : BaseDao<Presenter> {
 
     @Query("SELECT * FROM presenters ORDER BY displayName")
     fun presentersByName(): DataSource.Factory<Int, Presenter>
+
+    @Query("SELECT * FROM presenters WHERE givenName LIKE :query OR surname LIKE :query OR displayName LIKE :query")
+    fun search(query: String): Flowable<List<Presenter>>
 }

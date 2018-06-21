@@ -15,7 +15,7 @@
     <style name="Theme.AudioVerse" parent="BaseTheme" />
 
     <style name="Theme.AudioVerse.Detail">
-        <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:navigationBarColor">?android:windowBackground</item>
         <item name="android:windowLightNavigationBar">true</item>
     </style>
 

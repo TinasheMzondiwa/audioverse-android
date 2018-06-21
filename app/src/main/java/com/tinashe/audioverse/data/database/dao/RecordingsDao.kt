@@ -8,7 +8,7 @@ import com.tinashe.audioverse.data.model.Recording
 import io.reactivex.Flowable
 
 @Dao
-interface RecordingsDao: BaseDao<Recording> {
+interface RecordingsDao : BaseDao<Recording> {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(presenters: List<Recording>)
@@ -18,4 +18,7 @@ interface RecordingsDao: BaseDao<Recording> {
 
     @Query("SELECT * FROM recordings WHERE tag = :tag")
     fun listByTag(tag: String): Flowable<List<Recording>>
+
+    @Query("SELECT * FROM recordings WHERE title LIKE :query")
+    fun search(query: String): Flowable<List<Recording>>
 }

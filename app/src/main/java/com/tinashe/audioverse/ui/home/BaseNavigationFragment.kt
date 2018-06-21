@@ -1,5 +1,6 @@
 package com.tinashe.audioverse.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.AppBarLayout
 import com.tinashe.audioverse.R
 import com.tinashe.audioverse.ui.home.tab.BaseTabFragment
+import com.tinashe.audioverse.ui.search.SearchActivity
 import com.tinashe.audioverse.utils.hide
 import kotlinx.android.synthetic.main.fragment_tabbed.*
 
@@ -60,7 +62,12 @@ class BaseNavigationFragment : Fragment() {
     private fun inflateMenu() {
         toolbar.inflateMenu(R.menu.menu_main)
         toolbar.setOnMenuItemClickListener {
-
+                when(it.itemId){
+                    R.id.action_search -> {
+                        val intent = Intent(context, SearchActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
             return@setOnMenuItemClickListener true
         }
     }

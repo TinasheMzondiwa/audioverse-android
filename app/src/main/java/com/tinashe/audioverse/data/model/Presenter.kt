@@ -9,7 +9,7 @@ import java.io.Serializable
 @Entity(tableName = "presenters", indices = [(Index(value = ["displayName"]))])
 data class Presenter(
         @PrimaryKey
-        val id: String) : Serializable {
+        val id: String) : Serializable, SearchItem {
 
     var givenName = ""
 

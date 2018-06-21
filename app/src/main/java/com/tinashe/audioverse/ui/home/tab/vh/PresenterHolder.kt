@@ -17,6 +17,9 @@ class PresenterHolder constructor(override val containerView: View) :
     companion object {
         fun inflate(parent: ViewGroup):
                 PresenterHolder = PresenterHolder(inflateView(R.layout.presenter_item, parent, false))
+
+        fun inflateSearch(parent: ViewGroup):
+                PresenterHolder = PresenterHolder(inflateView(R.layout.presenter_item_full, parent, false))
     }
 
     fun bind(presenter: Presenter, callback: (Presenter, View) -> Unit) {

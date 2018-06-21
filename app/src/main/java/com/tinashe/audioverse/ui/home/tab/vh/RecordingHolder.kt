@@ -63,7 +63,7 @@ class RecordingHolder constructor(override val containerView: View) :
         duration.text = Helper.formatDuration(recording.duration ?: "")
 
         itemView.setOnClickListener {
-            options.play()
+            options.play(recording)
         }
 
         more.setOnClickListener {
@@ -85,7 +85,7 @@ class RecordingHolder constructor(override val containerView: View) :
     }
 
     interface MoreOptions {
-        fun play()
+        fun play(item: Recording)
 
         fun share(content: String)
 

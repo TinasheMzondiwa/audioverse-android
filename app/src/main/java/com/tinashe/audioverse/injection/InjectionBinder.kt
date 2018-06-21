@@ -8,6 +8,8 @@ import com.tinashe.audioverse.ui.home.tab.BaseTabFragment
 import com.tinashe.audioverse.ui.home.tab.TabViewModel
 import com.tinashe.audioverse.ui.presenter.PresenterActivity
 import com.tinashe.audioverse.ui.presenter.PresenterViewModel
+import com.tinashe.audioverse.ui.search.SearchActivity
+import com.tinashe.audioverse.ui.search.SearchViewModel
 import com.tinashe.audioverse.ui.splash.SplashActivity
 import dagger.Binds
 import dagger.Module
@@ -33,6 +35,11 @@ internal abstract class InjectionBinder {
     internal abstract fun bindPresenterViewModel(presenterViewModel: PresenterViewModel): ViewModel
 
     @Binds
+    @IntoMap
+    @ViewModelKey(SearchViewModel::class)
+    internal abstract fun bindSearchViewModel(searchViewModel: SearchViewModel): ViewModel
+
+    @Binds
     internal abstract fun bindViewModelFractory(factory: ViewModelFactory): ViewModelProvider.Factory
 
 
@@ -47,5 +54,8 @@ internal abstract class InjectionBinder {
 
     @ContributesAndroidInjector
     abstract fun bindPresenterActivity(): PresenterActivity
+
+    @ContributesAndroidInjector
+    abstract fun bindSearchActivity(): SearchActivity
 
 }

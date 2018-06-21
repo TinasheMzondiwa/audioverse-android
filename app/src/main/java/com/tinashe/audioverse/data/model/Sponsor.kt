@@ -1,8 +1,9 @@
 package com.tinashe.audioverse.data.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-data class Sponsor(val id: String) {
+data class Sponsor(val id: String) : Serializable {
 
     var title = ""
 

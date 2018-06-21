@@ -114,7 +114,7 @@ class BaseTabFragment : Fragment() {
                             { parent, _ -> RecordingHolder.inflate(parent) },
                             { vh, _, item ->
                                 vh.bind(item, RecordingType.FEATURED, object : RecordingHolder.MoreOptions {
-                                    override fun play() {
+                                    override fun play(item: Recording) {
                                         context?.let {
                                             Helper.playRecording(it, item)
                                         }

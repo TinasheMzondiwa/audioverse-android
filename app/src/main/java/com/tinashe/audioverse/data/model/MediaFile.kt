@@ -1,6 +1,8 @@
 package com.tinashe.audioverse.data.model
 
-data class MediaFile(val fileId: String) {
+import java.io.Serializable
+
+data class MediaFile(val fileId: String) : Serializable {
 
     val fileName: String = ""
 

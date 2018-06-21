@@ -1,16 +1,16 @@
 package com.tinashe.audioverse.ui.home
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.tinashe.audioverse.R
 import com.tinashe.audioverse.injection.ViewModelFactory
+import com.tinashe.audioverse.ui.base.BaseActivity
 import com.tinashe.audioverse.utils.getViewModel
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_home.*
 import javax.inject.Inject
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory

@@ -26,6 +26,15 @@
         <activity
             android:name=".ui.presenter.PresenterActivity"
             android:theme="@style/Theme.AudioVerse.Detail" />
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:label="@string/search"
+            android:theme="@style/Theme.AudioVerse.Detail" />
+
+        <activity
+            android:name=".ui.search.SearchResultsActivity"
+            android:label="@string/blank"
+            android:theme="@style/Theme.AudioVerse.Detail" />
     </application>
 
 </manifest>
