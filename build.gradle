@@ -3,8 +3,8 @@
 buildscript {
     // Define Versions in a single place
     ext.versions = [
-            'material'       : '1.0.0-alpha3',
-            'arch_comp'      : '2.0.0-alpha1',
+            'material'       : '1.0.0-beta01',
+            'arch_comp'      : '2.0.0-beta01',
             'dagger'         : '2.16',
             'kotlin'         : '1.2.50',
             'rx_java'        : '2.1.5',
@@ -12,7 +12,7 @@ buildscript {
             'glide'          : '4.7.1',
             'retrofit'       : '2.3.0',
             'okhttp3'        : '3.8.1',
-            'timber'         : '4.6.1',
+            'timber'         : '4.7.0',
             'lottie'         : '2.5.4',
             'mockito'        : '2.13.0'
     ]
@@ -21,7 +21,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0-alpha18'
+        classpath 'com.android.tools.build:gradle:3.3.0-alpha02'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:${versions.kotlin}"
 

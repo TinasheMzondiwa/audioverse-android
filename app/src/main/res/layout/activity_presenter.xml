@@ -108,6 +108,4 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <include layout="@layout/include_divider" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
