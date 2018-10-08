@@ -11,8 +11,8 @@ import com.tinashe.audioverse.data.model.SearchResult
 import com.tinashe.audioverse.data.repository.helper.PresentersDataFactory
 import com.tinashe.audioverse.utils.Helper
 import com.tinashe.audioverse.utils.RxSchedulers
+import com.tinashe.audioverse.utils.ioThread
 import io.reactivex.BackpressureStrategy
-import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
@@ -42,15 +42,14 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
     override fun getRecordings(presenterId: String): Flowable<List<Recording>> {
         val api = audioVerseApi.getPresenterRecordings(presenterId)
                 .subscribeOn(rxSchedulers.network)
-                .flatMap {
-                    if (it.isSuccessful) {
-                        it.body()?.let {
-                            val recordings = it.getRecordings()
+                .flatMap { response ->
+                    if (response.isSuccessful) {
+                        response.body()?.let {
+                            val recordings = it.recordings
 
-                            Completable.fromAction {
+                            ioThread {
                                 audioVerseDb.recordingsDao().insertAll(recordings)
-                            }.subscribeOn(rxSchedulers.database)
-                                    .subscribe()
+                            }
 
                             Observable.just(recordings)
                         }
@@ -60,7 +59,7 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
                 }
         val db = audioVerseDb.recordingsDao().listAll()
                 .subscribeOn(rxSchedulers.database)
-                .flatMap { Flowable.just(it.filter { it.presenters.isNotEmpty() && it.presenters.first().id == presenterId }) }
+                .flatMap { list -> Flowable.just(list.filter { it.presenters.isNotEmpty() && it.presenters.first().id == presenterId }) }
 
 
         return Flowable.merge(db, api.toFlowable(BackpressureStrategy.LATEST))
@@ -79,17 +78,16 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
         val tag = Helper.getTag(type)
 
         val apiResponse = api.subscribeOn(rxSchedulers.network)
-                .flatMap {
-                    if (it.isSuccessful) {
-                        it.body()?.let {
-                            val recordings = it.getRecordings()
+                .flatMap { response ->
+                    if (response.isSuccessful) {
+                        response.body()?.let { body ->
+                            val recordings = body.recordings
 
-                            recordings.map { it.tag = tag }
+                            recordings.forEach { it.tag = tag }
 
-                            Completable.fromAction {
+                            ioThread {
                                 audioVerseDb.recordingsDao().insertAll(recordings)
-                            }.subscribeOn(rxSchedulers.database)
-                                    .subscribe()
+                            }
 
                             Observable.just(recordings)
                         }

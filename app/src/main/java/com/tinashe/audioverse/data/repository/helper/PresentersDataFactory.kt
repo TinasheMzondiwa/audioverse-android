@@ -34,7 +34,7 @@ class PresentersDataFactory constructor(private val audioVerseApi: AudioVerseApi
                     val response = api.listPresenters().execute()
                     if (response.isSuccessful) {
                         response.body()?.let {
-                            database.presentersDao().insertAll(it.getPresenterss())
+                            database.presentersDao().insertAll(it.presenters)
                             callback.onResult(database.presentersDao().listAllDirect())
                         }
                     }
@@ -56,7 +56,7 @@ class PresentersDataFactory constructor(private val audioVerseApi: AudioVerseApi
             val response = api.listPresenters().execute()
             if (response.isSuccessful) {
                 response.body()?.let {
-                    database.presentersDao().insertAll(it.getPresenterss())
+                    database.presentersDao().insertAll(it.presenters)
                 }
             }
         }

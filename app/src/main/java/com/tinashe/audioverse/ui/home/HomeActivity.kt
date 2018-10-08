@@ -25,8 +25,8 @@ class HomeActivity : BaseActivity() {
         AndroidInjection.inject(this)
 
         viewModel = getViewModel(this, viewModelFactory)
-        viewModel.navigationHolder.observe(this, Observer {
-            it?.let {
+        viewModel.navigationHolder.observe(this, Observer { navigation ->
+            navigation?.let {
 
                 currFragment = BaseNavigationFragment.newInstance(it)
                 supportFragmentManager.beginTransaction()

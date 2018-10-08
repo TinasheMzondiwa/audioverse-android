@@ -22,11 +22,6 @@ import kotlinx.android.synthetic.main.recording_item.*
 class RecordingHolder constructor(override val containerView: View) :
         RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-    companion object {
-        fun inflate(parent: ViewGroup):
-                RecordingHolder = RecordingHolder(inflateView(R.layout.recording_item, parent, false))
-    }
-
     fun bind(recording: Recording, type: RecordingType, options: MoreOptions) {
         title.text = recording.title
 
@@ -66,9 +61,9 @@ class RecordingHolder constructor(override val containerView: View) :
             options.play(recording)
         }
 
-        more.setOnClickListener {
+        more.setOnClickListener { view ->
 
-            val menu = PopupMenu(it.context, it)
+            val menu = PopupMenu(view.context, view)
             menu.inflate(R.menu.menu_more)
             recording.shareUrl?.let {
                 menu.menu.findItem(R.id.action_share).isVisible = true
@@ -90,5 +85,10 @@ class RecordingHolder constructor(override val containerView: View) :
         fun share(content: String)
 
         fun favorite(enabled: Boolean)
+    }
+
+    companion object {
+        fun inflate(parent: ViewGroup):
+                RecordingHolder = RecordingHolder(inflateView(R.layout.recording_item, parent, false))
     }
 }

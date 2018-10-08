@@ -19,14 +19,14 @@ class SearchViewModel @Inject constructor(private val rxSchedulers: RxSchedulers
 
     fun search(query: String?) {
         if (query == null || query.isEmpty()) {
-            searchResults.value = SearchResult(emptyList(), emptyList())
+            searchResults.postValue(SearchResult(emptyList(), emptyList()))
             return
         }
         val disposable = repository.searchFor(query)
                 .subscribeOn(rxSchedulers.database)
                 .observeOn(rxSchedulers.main)
                 .subscribe({
-                    searchResults.value = it
+                    searchResults.postValue(it)
 
                 }, {
                     Timber.e(it, it.message)

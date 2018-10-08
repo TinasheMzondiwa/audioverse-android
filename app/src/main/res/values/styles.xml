@@ -15,13 +15,13 @@
         <item name="textAllCaps">false</item>
     </style>
 
-    <style name="Theme.AudioVerse.Menu.Active" parent="@style/TextAppearance.MaterialComponents.BottomNavigationView.Colored.Active">
+    <!--<style name="Theme.AudioVerse.Menu.Active" parent="@style/TextAppearance.MaterialComponents.C">
         <item name="android:fontFamily">@font/sans_bold</item>
     </style>
 
     <style name="Theme.AudioVerse.Menu.InActive" parent="@style/TextAppearance.MaterialComponents.BottomNavigationView.Colored">
         <item name="android:fontFamily">@font/sans_regular</item>
-    </style>
+    </style>-->
 
     <style name="expanded" parent="@style/TextAppearance.Design.CollapsingToolbar.Expanded">
         <item name="android:fontFamily">@font/sans_bold</item>

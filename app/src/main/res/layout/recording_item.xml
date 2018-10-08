@@ -43,7 +43,6 @@
             android:ellipsize="end"
             android:fontFamily="@font/sans_regular"
             android:maxLines="1"
-            android:paddingTop="@dimen/spacing_micro"
             android:paddingBottom="@dimen/spacing_micro"
             android:textColor="?android:textColorPrimary"
             android:textSize="@dimen/text_size_xsmall"

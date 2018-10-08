@@ -51,16 +51,19 @@ class PresenterActivity : BaseActivity() {
         initPresenter(presenter)
 
         viewModel = getViewModel(this, viewModelFactory)
-        viewModel.presentations.observe(this, Observer {
+        viewModel.presentations.observe(this, Observer { list ->
 
-            it?.let {
+            list?.let {
                 if (it.isNotEmpty()) {
                     presentationsLabel.show()
-                    progressBar.hide()
+                } else {
+                    presentationsLabel.hide()
                 }
 
                 listAdapter.items = it.toMutableList()
-            } ?: progressBar.hide()
+
+                progressBar.hide()
+            }
         })
         viewModel.fetchPresentations(presenter.id)
 

@@ -9,15 +9,7 @@ class PresentersResponse : BaseResponse() {
     @SerializedName("result")
     private var result = listOf<PresWrapper>()
 
-    fun getPresenterss(): List<Presenter> {
-        val items = mutableListOf<Presenter>()
+    var presenters: List<Presenter> = emptyList()
+        get() = result.mapNotNull { it.recording }
 
-        result.map {
-            it.recording?.let {
-                items.add(it)
-            }
-        }
-
-        return items
-    }
 }

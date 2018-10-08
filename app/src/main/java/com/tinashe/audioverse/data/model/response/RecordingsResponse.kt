@@ -9,15 +9,6 @@ class RecordingsResponse : BaseResponse() {
     @SerializedName("result")
     private var result = listOf<RecWrapper>()
 
-    fun getRecordings(): List<Recording> {
-        val items = mutableListOf<Recording>()
-
-        result.map {
-            it.recording?.let {
-                items.add(it)
-            }
-        }
-
-        return items
-    }
+    var recordings: List<Recording> = emptyList()
+        get() = result.mapNotNull { it.recording }
 }

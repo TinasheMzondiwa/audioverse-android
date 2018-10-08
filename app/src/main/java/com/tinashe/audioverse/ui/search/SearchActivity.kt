@@ -45,8 +45,8 @@ class SearchActivity : BaseActivity() {
         })
 
         viewModel = getViewModel(this, viewModelFactory)
-        viewModel.searchResults.observe(this, Observer {
-            it?.let {
+        viewModel.searchResults.observe(this, Observer { result ->
+            result?.let {
                 listAdapter.results = it
             } ?: listAdapter.reset()
         })

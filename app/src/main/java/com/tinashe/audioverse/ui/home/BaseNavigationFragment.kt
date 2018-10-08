@@ -19,14 +19,6 @@ class BaseNavigationFragment : Fragment() {
 
     private lateinit var tabsAdapter: TabsListAdapter
 
-    companion object {
-        fun newInstance(@Navigation item: Int): BaseNavigationFragment {
-            val fragment = BaseNavigationFragment()
-            fragment.navigation = item
-            return fragment
-        }
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_tabbed, container, false)
     }
@@ -76,6 +68,14 @@ class BaseNavigationFragment : Fragment() {
         val fragment = tabsAdapter.getItem(viewPager.currentItem)
         if (fragment is BaseTabFragment) {
             fragment.scrollToTop()
+        }
+    }
+
+    companion object {
+        fun newInstance(@Navigation item: Int): BaseNavigationFragment {
+            val fragment = BaseNavigationFragment()
+            fragment.navigation = item
+            return fragment
         }
     }
 }

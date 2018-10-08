@@ -8,7 +8,7 @@ open class BaseResponse {
 
     val count = 0
 
-    val succes: Boolean
+    val success: Boolean
         get() {
             return code == 200
         }
