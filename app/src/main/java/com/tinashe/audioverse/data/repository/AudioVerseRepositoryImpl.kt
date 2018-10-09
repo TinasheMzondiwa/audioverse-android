@@ -34,14 +34,14 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
                 .subscribeOn(rxSchedulers.network)
                 .flatMap { response ->
                     if (response.isSuccessful) {
-                        response.body()?.let {
-                            val recordings = it.recordings
+                        response.body()?.let { body ->
+                            val recordings = body.recordings
 
                             ioThread {
                                 audioVerseDb.recordingsDao().insertAll(recordings)
                             }
 
-                            Observable.just(recordings)
+                            Observable.just(recordings.sortedBy { it.publishDate })
                         }
                     } else {
                         Observable.error(RuntimeException(""))
@@ -49,7 +49,7 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
                 }
         val db = audioVerseDb.recordingsDao().listAll()
                 .subscribeOn(rxSchedulers.database)
-                .flatMap { list -> Flowable.just(list.filter { it.presenters.isNotEmpty() && it.presenters.first().id == presenterId }) }
+                .flatMap { list -> Flowable.just(list.asSequence().sortedBy { it.publishDate }.filter { it.presenters.isNotEmpty() && it.presenters.first().id == presenterId }.toList()) }
 
 
         return Flowable.merge(db, api.toFlowable(BackpressureStrategy.LATEST))
@@ -79,7 +79,7 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
                                 audioVerseDb.recordingsDao().insertAll(recordings)
                             }
 
-                            Observable.just(recordings)
+                            Observable.just(recordings.sortedBy { it.publishDate })
                         }
                     } else {
                         Observable.error(RuntimeException(""))

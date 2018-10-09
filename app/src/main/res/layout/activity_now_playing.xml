@@ -18,8 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+            app:contentScrim="@android:color/white"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap">
 
             <ImageView
                 android:id="@+id/art"
@@ -58,22 +58,41 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:background="@drawable/player_content_bg"
             android:clipToPadding="false"
             android:orientation="vertical"
-            android:paddingTop="@dimen/spacing_large"
+            android:paddingTop="@dimen/spacing_medium"
             android:paddingBottom="@dimen/spacing_xlarge">
 
-            <TextView
-                android:id="@+id/recTitle"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/sans_bold"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingStart="@dimen/spacing_medium"
-                android:paddingEnd="@dimen/spacing_medium"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                android:textColor="@color/text"
-                tools:text="@tools:sample/lorem" />
+                android:paddingEnd="@dimen/spacing_medium">
+
+                <TextView
+                    android:id="@+id/recTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/sans_bold"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:textColor="@color/text"
+                    tools:text="@tools:sample/lorem" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/makeOfflinePin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_medium"
+                    android:background="@drawable/ic_make_available_offline"
+                    android:padding="@dimen/spacing_micro" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/presenterTxt"
@@ -110,51 +129,6 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="-1dp"
-        android:background="@drawable/player_content_bg"
-        android:clipToPadding="false"
-        android:elevation="6dp"
-        android:paddingStart="@dimen/spacing_medium"
-        android:paddingTop="@dimen/spacing_micro"
-        android:paddingEnd="@dimen/spacing_micro"
-        android:paddingBottom="@dimen/spacing_list"
-        android:translationZ="6dp">
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_margin="@dimen/spacing_medium"
-            android:layout_toStartOf="@id/fab"
-            android:padding="@dimen/spacing_micro"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_skip_previous" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginStart="@dimen/spacing_medium"
-            android:layout_marginEnd="@dimen/spacing_medium"
-            android:src="@drawable/ic_play"
-            app:fabCustomSize="64dp" />
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_margin="@dimen/spacing_medium"
-            android:padding="@dimen/spacing_micro"
-            android:layout_toEndOf="@id/fab"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_skip_next" />
-
-
-    </RelativeLayout>
+    <include layout="@layout/include_player_vew" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

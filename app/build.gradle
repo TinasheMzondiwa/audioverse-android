@@ -11,7 +11,7 @@ android {
         targetSdkVersion 28
         versionCode 4
         versionName "1.0.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField "String", "URL_BASE", API_BASE_URL
         buildConfigField "String", "API_TOKEN", API_TOKEN
@@ -45,7 +45,9 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
+
     implementation "com.google.android.material:material:${versions.material}"
+    implementation "androidx.appcompat:appcompat:${versions.material}"
 
     implementation "androidx.lifecycle:lifecycle-extensions:${versions.arch_comp}"
     implementation "androidx.lifecycle:lifecycle-runtime:${versions.arch_comp}"
@@ -83,6 +85,6 @@ dependencies {
     implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.18'
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'androidx.test:runner:1.1.0-beta01'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-beta01'
 }
