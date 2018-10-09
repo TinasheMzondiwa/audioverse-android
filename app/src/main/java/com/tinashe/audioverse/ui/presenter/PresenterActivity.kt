@@ -9,7 +9,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
-import com.squareup.picasso.Picasso
 import com.tinashe.audioverse.R
 import com.tinashe.audioverse.data.model.BundledExtras
 import com.tinashe.audioverse.data.model.Presenter
@@ -19,7 +18,6 @@ import com.tinashe.audioverse.injection.ViewModelFactory
 import com.tinashe.audioverse.ui.base.BaseActivity
 import com.tinashe.audioverse.ui.home.tab.vh.RecordingHolder
 import com.tinashe.audioverse.utils.*
-import com.tinashe.audioverse.utils.custom.PicassoCircleTransform
 import com.tinashe.audioverse.utils.custom.UniversalAdapter
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_presenter.*
@@ -75,12 +73,7 @@ class PresenterActivity : BaseActivity() {
 
         title = presenter.displayName
 
-        Picasso.get()
-                .load(presenter.photoLarge)
-                .placeholder(R.drawable.ic_account_circle)
-                .error(R.drawable.ic_account_circle)
-                .transform(PicassoCircleTransform())
-                .into(avatar)
+        avatar.loadAvatar(presenter.photoLarge)
 
         about.text = "${presenter.description}\n${presenter.website}".trim()
 
@@ -110,6 +103,12 @@ class PresenterActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if(listAdapter.itemCount > 0){
+            progressBar.hide()
+        }
+    }
 
     companion object {
 

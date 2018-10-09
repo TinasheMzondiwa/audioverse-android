@@ -5,4 +5,12 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="colorPrimaryDark">@color/background</item>
     </style>
+
+    <style name="Theme.AudioVerse.Detail.Now">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
 </resources>

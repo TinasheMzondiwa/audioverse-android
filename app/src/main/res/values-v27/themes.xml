@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.AudioVerse.Detail">
+        <item name="android:navigationBarColor">?android:windowBackground</item>
+        <item name="android:navigationBarDividerColor">@color/dividers</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+
+</resources>

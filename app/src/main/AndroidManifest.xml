@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AudioVerse"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity android:name=".ui.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,6 +35,10 @@
             android:name=".ui.search.SearchResultsActivity"
             android:label="@string/blank"
             android:theme="@style/Theme.AudioVerse.Detail" />
+        <activity
+            android:name=".ui.player.NowPlayingActivity"
+            android:label="@string/blank"
+            android:theme="@style/Theme.AudioVerse.Detail.Now" />
     </application>
 
 </manifest>

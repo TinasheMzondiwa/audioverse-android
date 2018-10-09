@@ -18,8 +18,11 @@
 
     <style name="Theme.AudioVerse.Detail">
         <item name="android:navigationBarColor">?android:windowBackground</item>
-        <item name="android:navigationBarDividerColor">@color/dividers</item>
-        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+
+    <style name="Theme.AudioVerse.Detail.Now">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
 </resources>

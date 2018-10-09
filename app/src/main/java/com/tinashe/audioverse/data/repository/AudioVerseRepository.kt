@@ -16,5 +16,7 @@ interface AudioVerseRepository {
 
     fun getRecordings(type: RecordingType): Observable<List<Recording>>
 
+    fun getSeries(seriesId: String): Observable<List<Recording>>
+
     fun searchFor(query: String): Flowable<SearchResult>
 }

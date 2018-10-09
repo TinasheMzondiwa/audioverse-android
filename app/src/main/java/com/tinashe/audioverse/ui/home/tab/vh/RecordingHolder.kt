@@ -4,17 +4,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
 import com.tinashe.audioverse.R
 import com.tinashe.audioverse.data.model.Presenter
 import com.tinashe.audioverse.data.model.Recording
 import com.tinashe.audioverse.data.model.RecordingType
 import com.tinashe.audioverse.data.model.Series
-import com.tinashe.audioverse.utils.Helper
-import com.tinashe.audioverse.utils.custom.PicassoCircleTransform
-import com.tinashe.audioverse.utils.hide
-import com.tinashe.audioverse.utils.inflateView
-import com.tinashe.audioverse.utils.show
+import com.tinashe.audioverse.utils.*
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.recording_item.*
 
@@ -36,12 +31,7 @@ class RecordingHolder constructor(override val containerView: View) :
         }
         val image = series?.photoMed ?: presenter?.photoMed ?: ""
 
-        Picasso.get()
-                .load(image)
-                .placeholder(R.drawable.ic_account_circle)
-                .error(R.drawable.ic_account_circle)
-                .transform(PicassoCircleTransform())
-                .into(avatar)
+        avatar.loadAvatar(image)
 
         if (presenter != null && type != RecordingType.PRESENTER) {
             seriesName.text = presenter.displayName

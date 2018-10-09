@@ -9,7 +9,7 @@ buildscript {
             'kotlin'         : '1.2.71',
             'rx_java'        : '2.1.5',
             'rx_android'     : '2.0.2',
-            'glide'          : '4.7.1',
+            'glide'          : '4.8.0',
             'retrofit'       : '2.3.0',
             'okhttp3'        : '3.8.1',
             'timber'         : '4.7.1',
@@ -21,12 +21,9 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha13'
+        classpath 'com.android.tools.build:gradle:3.2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:${versions.kotlin}"
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
 

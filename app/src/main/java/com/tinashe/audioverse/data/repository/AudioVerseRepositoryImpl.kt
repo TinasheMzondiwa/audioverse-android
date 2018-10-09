@@ -21,16 +21,6 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
                                            private val audioVerseDb: AudioVerseDb,
                                            private val rxSchedulers: RxSchedulers) : AudioVerseRepository {
 
-    companion object {
-        private const val PAGE_SIZE = 50
-
-        private val pagedListConfig = PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setInitialLoadSizeHint(PAGE_SIZE * 2)
-                .setPageSize(PAGE_SIZE)
-                .build()
-    }
-
     override fun getPresenters(): Flowable<PagedList<Presenter>> {
         val sourceFactory = PresentersDataFactory(audioVerseApi, audioVerseDb)
 
@@ -109,5 +99,21 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
 
         return Flowable.zip(audioVerseDb.recordingsDao().search(searchTerm), audioVerseDb.presentersDao().search(searchTerm),
                 BiFunction { recordings, presenters -> SearchResult(recordings, presenters) })
+    }
+
+    override fun getSeries(seriesId: String): Observable<List<Recording>> {
+        return audioVerseDb.recordingsDao().listSeries(seriesId)
+                .toObservable()
+                .subscribeOn(rxSchedulers.database)
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 50
+
+        private val pagedListConfig = PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setInitialLoadSizeHint(PAGE_SIZE * 2)
+                .setPageSize(PAGE_SIZE)
+                .build()
     }
 }

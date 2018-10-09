@@ -16,6 +16,9 @@ interface RecordingsDao : BaseDao<Recording> {
     @Query("SELECT * FROM recordings")
     fun listAll(): Flowable<List<Recording>>
 
+    @Query("SELECT * FROM recordings WHERE seriesId = :id ORDER BY publishDate")
+    fun listSeries(id: String): Flowable<List<Recording>>
+
     @Query("SELECT * FROM recordings WHERE tag = :tag")
     fun listByTag(tag: String): Flowable<List<Recording>>
 

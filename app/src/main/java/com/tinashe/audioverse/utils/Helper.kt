@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.core.app.ShareCompat
 import com.tinashe.audioverse.data.model.Recording
 import com.tinashe.audioverse.data.model.RecordingType
+import com.tinashe.audioverse.ui.player.NowPlayingActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -35,7 +36,7 @@ object Helper {
         return "${type.name}-$day"
     }
 
-    fun shareText(activity: Activity, content: String){
+    fun shareText(activity: Activity, content: String) {
         val intent = ShareCompat.IntentBuilder.from(activity)
                 .setType("text/plain")
                 .setText(content)
@@ -45,7 +46,13 @@ object Helper {
         }
     }
 
-    fun playRecording(context: Context, recording: Recording){
+    fun playRecording(context: Context, recording: Recording) {
+
+        if (1 == 1) {
+            NowPlayingActivity.launch(context, recording)
+            return
+        }
+
         if (recording.mediaFiles.isEmpty()) {
             Toast.makeText(context, "Missing audio file.", Toast.LENGTH_SHORT).show()
 

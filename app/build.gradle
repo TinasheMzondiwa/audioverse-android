@@ -77,7 +77,9 @@ dependencies {
 
     implementation "com.jakewharton.timber:timber:${versions.timber}"
 
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation "com.github.bumptech.glide:glide:${versions.glide}"
+    kapt "com.github.bumptech.glide:compiler:${versions.glide}"
+
     implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.18'
 
     testImplementation 'junit:junit:4.12'
