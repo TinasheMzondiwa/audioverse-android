@@ -48,6 +48,7 @@ dependencies {
 
     implementation "com.google.android.material:material:${versions.material}"
     implementation "androidx.appcompat:appcompat:${versions.material}"
+    implementation "androidx.media:media:${versions.material}"
 
     implementation "androidx.lifecycle:lifecycle-extensions:${versions.arch_comp}"
     implementation "androidx.lifecycle:lifecycle-runtime:${versions.arch_comp}"
@@ -81,6 +82,10 @@ dependencies {
 
     implementation "com.github.bumptech.glide:glide:${versions.glide}"
     kapt "com.github.bumptech.glide:compiler:${versions.glide}"
+
+    implementation "com.google.android.exoplayer:exoplayer-core:${versions.exoplayer}"
+    implementation "com.google.android.exoplayer:exoplayer-ui:${versions.exoplayer}"
+    implementation "com.google.android.exoplayer:extension-mediasession:${versions.exoplayer}"
 
     implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.18'
 

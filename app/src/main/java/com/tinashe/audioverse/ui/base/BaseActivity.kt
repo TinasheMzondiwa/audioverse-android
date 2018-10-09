@@ -1,6 +1,8 @@
 package com.tinashe.audioverse.ui.base
 
+import android.media.AudioManager
 import android.os.Build
+import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -35,5 +37,11 @@ abstract class BaseActivity : AppCompatActivity() {
             flags = flags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
             view.systemUiVisibility = flags
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        volumeControlStream = AudioManager.STREAM_MUSIC
     }
 }

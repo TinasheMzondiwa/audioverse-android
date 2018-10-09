@@ -1,6 +1,7 @@
 package com.tinashe.audioverse.data.model
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
@@ -41,6 +42,40 @@ data class Recording(
     var mediaFiles = listOf<MediaFile>()
 
     var presenters = listOf<Presenter>()
+
+    @Ignore
+    var presenter: String = ""
+        get() {
+            return if (presenters.isNotEmpty()) {
+                presenters.first().displayName
+            } else
+                ""
+        }
+
+    @Ignore
+    var source: String = ""
+        get() {
+            return if (mediaFiles.isNotEmpty()) {
+                mediaFiles.first().streamURL
+            } else
+                ""
+        }
+
+    @Ignore
+    var image: String = ""
+        get() {
+            var series: Series? = null
+            if (this.series.isNotEmpty()) {
+                series = this.series.first()
+            }
+            var presenter: Presenter? = null
+
+            if (this.presenters.isNotEmpty()) {
+                presenter = this.presenters.first()
+            }
+
+            return series?.photoMed ?: presenter?.photoMed ?: ""
+        }
 
     var series = listOf<Series>()
 

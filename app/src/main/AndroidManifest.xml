@@ -4,6 +4,7 @@
     package="com.tinashe.audioverse">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".AudioVerseApp"
@@ -39,6 +40,35 @@
             android:name=".ui.player.NowPlayingActivity"
             android:label="@string/blank"
             android:theme="@style/Theme.AudioVerse.Detail.Now" />
+
+        <service
+            android:name=".media.MusicService"
+            android:exported="true"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
+
+        <!--
+             MediaSession, prior to API 21, uses a broadcast receiver to communicate with a
+             media session. It does not have to be this broadcast receiver, but it must
+             handle the action "android.intent.action.MEDIA_BUTTON".
+
+             Additionally, this is used to resume the service from an inactive state upon
+             receiving a media button event (such as "play").
+        -->
+        <receiver android:name="androidx.media.session.MediaButtonReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Declare that app supports Android Auto. -->
+        <meta-data
+            android:name="com.google.android.gms.car.application"
+            android:resource="@xml/automotive_app_desc" />
+
     </application>
 
 </manifest>

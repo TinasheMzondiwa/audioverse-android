@@ -14,7 +14,8 @@ buildscript {
             'okhttp3'        : '3.8.1',
             'timber'         : '4.7.1',
             'lottie'         : '2.5.4',
-            'mockito'        : '2.13.0'
+            'mockito'        : '2.13.0',
+            'exoplayer'      : '2.8.4'
     ]
     repositories {
         google()

@@ -17,9 +17,10 @@ import com.tinashe.audioverse.ui.home.tab.vh.RecordingHolder
 import com.tinashe.audioverse.utils.*
 import com.tinashe.audioverse.utils.custom.AppBarStateChangeListener
 import com.tinashe.audioverse.utils.custom.UniversalAdapter
-import kotlinx.android.synthetic.main.activity_now_playing.*
-import javax.inject.Inject
 import dagger.android.AndroidInjection
+import kotlinx.android.synthetic.main.activity_now_playing.*
+import kotlinx.android.synthetic.main.include_player_vew.*
+import javax.inject.Inject
 
 class NowPlayingActivity : BaseActivity() {
 
@@ -134,6 +135,10 @@ class NowPlayingActivity : BaseActivity() {
         description.text = recording.description
 
         viewModel.listSeries(recording)
+
+        fab.setOnClickListener {
+            viewModel.playMedia(recording)
+        }
     }
 
     companion object {
@@ -141,6 +146,7 @@ class NowPlayingActivity : BaseActivity() {
         fun launch(context: Context, recording: Recording) {
             val intent = Intent(context, NowPlayingActivity::class.java)
             intent.putExtra(RECORDING, recording)
+            //NowPlayingViewModel.MEDIA_ID = recording.id
             context.startActivity(intent)
         }
     }

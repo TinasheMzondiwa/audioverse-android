@@ -2,6 +2,7 @@ package com.tinashe.audioverse.injection
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.tinashe.audioverse.media.MusicService
 import com.tinashe.audioverse.ui.home.HomeActivity
 import com.tinashe.audioverse.ui.home.HomeViewModel
 import com.tinashe.audioverse.ui.home.tab.BaseTabFragment
@@ -21,6 +22,7 @@ import dagger.multibindings.IntoMap
 @Module
 internal abstract class InjectionBinder {
 
+    // ViewModels
     @Binds
     @IntoMap
     @ViewModelKey(HomeViewModel::class)
@@ -50,6 +52,7 @@ internal abstract class InjectionBinder {
     internal abstract fun bindViewModelFractory(factory: ViewModelFactory): ViewModelProvider.Factory
 
 
+    // Activities
     @ContributesAndroidInjector
     abstract fun bindSplashActivity(): SplashActivity
 
@@ -67,5 +70,10 @@ internal abstract class InjectionBinder {
 
     @ContributesAndroidInjector
     abstract fun bindNowActivity(): NowPlayingActivity
+
+
+    // Services
+    @ContributesAndroidInjector
+    abstract fun bindMusicService(): MusicService
 
 }
