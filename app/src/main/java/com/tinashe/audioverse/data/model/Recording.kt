@@ -116,4 +116,6 @@ data class Recording(
     var uri: String? = ""
 
     var tag: String? = null
+
+    var favorite: Boolean = false
 }

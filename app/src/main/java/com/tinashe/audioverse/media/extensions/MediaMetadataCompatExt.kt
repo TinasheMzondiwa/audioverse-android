@@ -21,6 +21,7 @@ import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.RatingCompat
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.upstream.DataSource
@@ -77,8 +78,8 @@ inline val MediaMetadataCompat.albumArt
 inline val MediaMetadataCompat.albumArtUri
     get() = Uri.parse(this.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI))
 
-inline val MediaMetadataCompat.userRating
-    get() = getLong(MediaMetadataCompat.METADATA_KEY_USER_RATING)
+inline val MediaMetadataCompat.userRating: RatingCompat
+    get() = getRating(MediaMetadataCompat.METADATA_KEY_USER_RATING)
 
 inline val MediaMetadataCompat.rating get() = getLong(MediaMetadataCompat.METADATA_KEY_RATING)
 
@@ -103,13 +104,14 @@ inline val MediaMetadataCompat.mediaUri
 inline val MediaMetadataCompat.downloadStatus
     get() = getLong(MediaMetadataCompat.METADATA_KEY_DOWNLOAD_STATUS)
 
+
 /**
  * Custom property for storing whether a [MediaMetadataCompat] item represents an
  * item that is [MediaItem.FLAG_BROWSABLE] or [MediaItem.FLAG_PLAYABLE].
  */
 @MediaItem.Flags
 inline val MediaMetadataCompat.flag
-    get() = this.getLong(METADATA_KEY_UAMP_FLAGS).toInt()
+    get() = this.getLong(METADATA_KEY_AVMP_FLAGS).toInt()
 
 /**
  * Useful extensions for [MediaMetadataCompat.Builder].
@@ -230,6 +232,13 @@ inline var MediaMetadataCompat.Builder.downloadStatus: Long
         putLong(MediaMetadataCompat.METADATA_KEY_DOWNLOAD_STATUS, value)
     }
 
+inline var MediaMetadataCompat.Builder.userRating: RatingCompat
+    @Deprecated(NO_GET, level = DeprecationLevel.ERROR)
+    get() = throw IllegalAccessException("Cannot get from MediaMetadataCompat.Builder")
+    set(value) {
+        putRating(MediaMetadataCompat.METADATA_KEY_USER_RATING, value)
+    }
+
 /**
  * Custom property for storing whether a [MediaMetadataCompat] item represents an
  * item that is [MediaItem.FLAG_BROWSABLE] or [MediaItem.FLAG_PLAYABLE].
@@ -239,7 +248,7 @@ inline var MediaMetadataCompat.Builder.flag: Int
     @Deprecated(NO_GET, level = DeprecationLevel.ERROR)
     get() = throw IllegalAccessException("Cannot get from MediaMetadataCompat.Builder")
     set(value) {
-        putLong(METADATA_KEY_UAMP_FLAGS, value.toLong())
+        putLong(METADATA_KEY_AVMP_FLAGS, value.toLong())
     }
 
 /**
@@ -283,4 +292,4 @@ fun List<MediaMetadataCompat>.toMediaSource(
  * Custom property that holds whether an item is [MediaItem.FLAG_BROWSABLE] or
  * [MediaItem.FLAG_PLAYABLE].
  */
-const val METADATA_KEY_UAMP_FLAGS = "${BuildConfig.APPLICATION_ID}.media.METADATA_KEY_UAMP_FLAGS"
+const val METADATA_KEY_AVMP_FLAGS = "${BuildConfig.APPLICATION_ID}.media.METADATA_KEY_AVMP_FLAGS"

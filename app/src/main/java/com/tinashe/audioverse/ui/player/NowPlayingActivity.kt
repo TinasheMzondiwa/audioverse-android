@@ -162,7 +162,7 @@ class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
         }
         val image = series?.photoLarge ?: presenter?.photoLarge ?: ""
 
-        art.loadUrl(image)
+        art.loadUrl(image, R.color.theme)
 
         recTitle.text = recording.title
         presenterTxt.text = series?.title ?: presenter?.displayName

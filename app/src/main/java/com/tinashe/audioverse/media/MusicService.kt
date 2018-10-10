@@ -43,8 +43,11 @@ import com.google.android.exoplayer2.util.Util
 import com.tinashe.audioverse.data.database.dao.RecordingsDao
 import com.tinashe.audioverse.media.NotificationBuilder.Companion.NOW_PLAYING_NOTIFICATION
 import com.tinashe.audioverse.media.audiofocus.AudioFocusExoPlayerDecorator
+import com.tinashe.audioverse.media.extensions.flag
+import com.tinashe.audioverse.media.extensions.userRating
 import com.tinashe.audioverse.media.library.MusicSource
 import com.tinashe.audioverse.media.library.RecordingsSource
+import com.tinashe.audioverse.ui.player.NowPlayingActivity
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
@@ -91,7 +94,8 @@ class MusicService : MediaBrowserServiceCompat() {
         AndroidInjection.inject(this)
 
         // Build a PendingIntent that can be used to launch the UI.
-        val sessionIntent = packageManager?.getLaunchIntentForPackage(packageName)
+        val sessionIntent = Intent(this, NowPlayingActivity::class.java)
+        //packageManager?.getLaunchIntentForPackage(packageName)
         val sessionActivityPendingIntent = PendingIntent.getActivity(this, 0, sessionIntent, 0)
 
         // Create a new MediaSession.
@@ -130,7 +134,7 @@ class MusicService : MediaBrowserServiceCompat() {
         mediaSessionConnector = MediaSessionConnector(mediaSession).also {
             // Produces DataSource instances through which media data is loaded.
             val dataSourceFactory = DefaultDataSourceFactory(
-                    this, Util.getUserAgent(this, UAMP_USER_AGENT), null)
+                    this, Util.getUserAgent(this, AVMP_USER_AGENT), null)
 
             // Create the PlaybackPreparer of the media session connector.
             val playbackPreparer = UampPlaybackPreparer(
@@ -139,7 +143,7 @@ class MusicService : MediaBrowserServiceCompat() {
                     dataSourceFactory)
 
             it.setPlayer(exoPlayer, playbackPreparer)
-            it.setQueueNavigator(UampQueueNavigator(mediaSession))
+            it.setQueueNavigator(AvAmpQueueNavigator(mediaSession))
         }
     }
 
@@ -159,24 +163,57 @@ class MusicService : MediaBrowserServiceCompat() {
      * Returns the "root" media ID that the client should request to get the list of
      * [MediaItem]s to browse/play.
      *
-     * TODO: Allow different roots based on which app is attempting to connect.
+     * In our case we allow browsing of all available [Recording]s
      */
-    override fun onGetRoot(clientPackageName: String,
-                           clientUid: Int,
+    override fun onGetRoot(clientPackageName: String, clientUid: Int,
                            rootHints: Bundle?): MediaBrowserServiceCompat.BrowserRoot? {
         return MediaBrowserServiceCompat.BrowserRoot("empty_root_id", null)
     }
 
     /**
-     * Returns (via the [result] parameter) a list of [MediaItem]s that are child
-     * items of the provided [parentMediaId]. See [BrowseTree] for more details on
-     * how this is build/more details about the relationships.
+     * Returns (via the [result] parameter) a list of [MediaItem]s that are available
      */
-    override fun onLoadChildren(
-            parentMediaId: String,
-            result: MediaBrowserServiceCompat.Result<List<MediaItem>>) {
+    override fun onLoadChildren(parentMediaId: String,
+                                result: MediaBrowserServiceCompat.Result<List<MediaItem>>) {
 
-        result.sendResult(null)
+        // If the media source is ready, the results will be set synchronously here.
+        val resultsSent = mediaSource.whenReady { successfullyInitialized ->
+            if (successfullyInitialized) {
+
+                val children = arrayListOf<MediaItem>()
+                val default = arrayListOf<MediaItem>()
+
+                mediaSource.iterator().forEach {
+
+                    val child = MediaItem(it.description, it.flag)
+
+                    if (it.userRating.isThumbUp) {
+                        children.add(child)
+                    } else {
+                        default.add(child)
+                    }
+                }
+
+                if (children.isEmpty()) {
+                    children.addAll(default.take(MAX_BROWSE_SIZE))
+                }
+
+                result.sendResult(children)
+
+            } else {
+                result.sendError(null)
+            }
+        }
+
+        // If the results are not ready, the service must "detach" the results before
+        // the method returns. After the source is ready, the lambda above will run,
+        // and the caller will be notified that the results are ready.
+        //
+        // See [MediaItemFragmentViewModel.subscriptionCallback] for how this is passed to the
+        // UI/displayed in the [RecyclerView].
+        if (!resultsSent) {
+            result.detach()
+        }
     }
 
     /**
@@ -245,7 +282,8 @@ class MusicService : MediaBrowserServiceCompat() {
     }
 
     companion object {
-        private const val UAMP_USER_AGENT = "uamp.next"
+        private const val AVMP_USER_AGENT = "avmp.next"
+        private const val MAX_BROWSE_SIZE = 15
     }
 }
 
@@ -253,7 +291,7 @@ class MusicService : MediaBrowserServiceCompat() {
  * Helper class to retrieve the the Metadata necessary for the ExoPlayer MediaSession connection
  * extension to call [MediaSessionCompat.setMetadata].
  */
-private class UampQueueNavigator(
+private class AvAmpQueueNavigator(
         mediaSession: MediaSessionCompat
 ) : TimelineQueueNavigator(mediaSession) {
     private val window = Timeline.Window()

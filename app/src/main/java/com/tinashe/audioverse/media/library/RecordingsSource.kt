@@ -5,6 +5,7 @@ import android.os.AsyncTask
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.RatingCompat
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -98,6 +99,7 @@ fun MediaMetadataCompat.Builder.from(recording: Recording): MediaMetadataCompat.
     displaySubtitle = recording.presenter
     displayDescription = recording.description
     displayIconUri = recording.image
+    userRating = RatingCompat.newThumbRating(recording.favorite)
 
     // Add downloadStatus to force the creation of an "extras" bundle in the resulting
     // MediaMetadataCompat object. This is needed to send accurate metadata to the

@@ -45,9 +45,11 @@ fun RecyclerView.horizontal() {
 fun inflateView(@LayoutRes layoutResId: Int, parent: ViewGroup, attachToRoot: Boolean): View =
         LayoutInflater.from(parent.context).inflate(layoutResId, parent, attachToRoot)
 
-fun ImageView.loadUrl(url: String?) {
+fun ImageView.loadUrl(url: String?, error: Int) {
     GlideApp.with(this)
             .load(url)
+            .placeholder(error)
+            .error(error)
             .transition(withCrossFade())
             .into(this)
 }

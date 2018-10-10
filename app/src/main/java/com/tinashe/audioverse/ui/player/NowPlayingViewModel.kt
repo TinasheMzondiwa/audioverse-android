@@ -10,7 +10,6 @@ import androidx.lifecycle.Observer
 import com.tinashe.audioverse.data.model.Recording
 import com.tinashe.audioverse.data.repository.AudioVerseRepository
 import com.tinashe.audioverse.media.EMPTY_PLAYBACK_STATE
-import com.tinashe.audioverse.media.MediaItemData
 import com.tinashe.audioverse.media.MediaSessionConnection
 import com.tinashe.audioverse.media.NOTHING_PLAYING
 import com.tinashe.audioverse.media.extensions.id
@@ -125,7 +124,7 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
 
     private val subscriptionCallback = object : MediaBrowserCompat.SubscriptionCallback() {
         override fun onChildrenLoaded(parentId: String, children: List<MediaBrowserCompat.MediaItem>) {
-            Timber.d("CHILDREN LOADED")
+            Timber.d("CHILDREN LOADED: ${children.size}")
         }
     }
 
@@ -178,10 +177,9 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
      * interact with its [MediaControllerCompat] to play media.
      *
      * [MediaSessionConnection.playbackState] changes state based on the playback state of
-     * the player, which can change the [MediaItemData.playbackRes]s in the list.
+     * the player.
      *
-     * [MediaSessionConnection.nowPlaying] changes based on the item that's being played,
-     * which can also change the [MediaItemData.playbackRes]s in the list.
+     * [MediaSessionConnection.nowPlaying] changes based on the item that's being played.
      */
     private val mediaSessionConnection: MediaSessionConnection = mediaSessionConnection.also {
         it.subscribe(mediaId, subscriptionCallback)

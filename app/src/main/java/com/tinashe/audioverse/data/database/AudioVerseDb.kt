@@ -10,7 +10,7 @@ import com.tinashe.audioverse.data.database.dao.RecordingsDao
 import com.tinashe.audioverse.data.model.Presenter
 import com.tinashe.audioverse.data.model.Recording
 
-@Database(entities = [(Recording::class), (Presenter::class)], version = 1, exportSchema = false)
+@Database(entities = [(Recording::class), (Presenter::class)], version = 2, exportSchema = false)
 @TypeConverters(DataTypeConverters::class)
 abstract class AudioVerseDb : RoomDatabase() {
 

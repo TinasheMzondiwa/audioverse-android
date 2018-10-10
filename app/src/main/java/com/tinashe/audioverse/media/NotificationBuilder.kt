@@ -26,6 +26,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.media.session.MediaButtonReceiver
 import com.tinashe.audioverse.BuildConfig
 import com.tinashe.audioverse.R
@@ -98,6 +99,7 @@ class NotificationBuilder(private val context: Context) {
                 .setOnlyAlertOnce(true)
                 .setSmallIcon(R.drawable.ic_stat_notif)
                 .setStyle(mediaStyle)
+                .setColor(ContextCompat.getColor(context, R.color.theme))
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .build()
     }
