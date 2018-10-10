@@ -29,10 +29,7 @@ import androidx.core.app.NotificationCompat
 import androidx.media.session.MediaButtonReceiver
 import com.tinashe.audioverse.BuildConfig
 import com.tinashe.audioverse.R
-import com.tinashe.audioverse.media.extensions.isPlayEnabled
-import com.tinashe.audioverse.media.extensions.isPlaying
-import com.tinashe.audioverse.media.extensions.isSkipToNextEnabled
-import com.tinashe.audioverse.media.extensions.isSkipToPreviousEnabled
+import com.tinashe.audioverse.media.extensions.*
 
 /**
  * Helper class to encapsulate code for building notifications.
@@ -95,6 +92,7 @@ class NotificationBuilder(private val context: Context) {
         return builder.setContentIntent(controller.sessionActivity)
                 .setContentText(description.subtitle)
                 .setContentTitle(description.title)
+                .setSubText(controller.metadata.album)
                 .setDeleteIntent(stopPendingIntent)
                 .setLargeIcon(description.iconBitmap)
                 .setOnlyAlertOnce(true)

@@ -12,9 +12,16 @@
         </item>
         <item name="android:textAppearanceSmallPopupMenu">@style/Theme.AudioVerse.PopupMenu.Small
         </item>
+        <item name="android:windowBackground">@color/background</item>
     </style>
 
     <style name="Theme.AudioVerse" parent="BaseTheme" />
+
+    <style name="Theme.AudioVerse.Splash" parent="BaseTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowBackground">@drawable/av_splash</item>
+    </style>
 
     <style name="Theme.AudioVerse.Detail">
         <item name="android:navigationBarColor">?android:windowBackground</item>
@@ -23,6 +30,7 @@
     <style name="Theme.AudioVerse.Detail.Now">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
     </style>
 
 </resources>

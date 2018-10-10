@@ -5,24 +5,30 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.media.session.PlaybackStateCompat
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.lifecycle.Observer
 import com.google.android.material.appbar.AppBarLayout
 import com.tinashe.audioverse.R
-import com.tinashe.audioverse.data.model.*
+import com.tinashe.audioverse.data.model.Presenter
+import com.tinashe.audioverse.data.model.Recording
+import com.tinashe.audioverse.data.model.Series
+import com.tinashe.audioverse.data.model.State
 import com.tinashe.audioverse.injection.ViewModelFactory
+import com.tinashe.audioverse.media.extensions.isSkipToNextEnabled
+import com.tinashe.audioverse.media.extensions.isSkipToPreviousEnabled
 import com.tinashe.audioverse.ui.base.BaseActivity
 import com.tinashe.audioverse.ui.home.tab.vh.RecordingHolder
 import com.tinashe.audioverse.utils.*
 import com.tinashe.audioverse.utils.custom.AppBarStateChangeListener
-import com.tinashe.audioverse.utils.custom.UniversalAdapter
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_now_playing.*
 import kotlinx.android.synthetic.main.include_player_vew.*
 import javax.inject.Inject
 
-class NowPlayingActivity : BaseActivity() {
+class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -31,7 +37,7 @@ class NowPlayingActivity : BaseActivity() {
 
     private var shareMenuItem: MenuItem? = null
 
-    private lateinit var recordingsListAdapter: UniversalAdapter<Recording, RecordingHolder>
+    private lateinit var relatedListAdapter: RelatedListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,19 +46,34 @@ class NowPlayingActivity : BaseActivity() {
         initUI()
 
         viewModel = getViewModel(this, viewModelFactory)
-        viewModel.series.observe(this, Observer {
-            recordingsListAdapter.items = it.toMutableList()
+        viewModel.relatedMedia.observe(this, Observer {
+            relatedListAdapter.items = ArrayList(it)
 
-            if(it.isEmpty()){
+            if (it.isEmpty()) {
                 seriesList.hide()
             } else {
                 seriesList.show()
             }
         })
 
+        viewModel.nowPlaying.observe(this, Observer {
+            initRecording(it)
+        })
+        viewModel.playbackState.observe(this, Observer {
+            fab.setImageResource(when (it.state) {
+                PlaybackStateCompat.STATE_PLAYING, PlaybackStateCompat.STATE_BUFFERING -> R.drawable.ic_pause
+                else -> R.drawable.ic_play
+            })
+
+            fab.isEnabled = it.state != PlaybackStateCompat.STATE_BUFFERING
+
+            playerPrevious.visibility = if (it.isSkipToPreviousEnabled) View.VISIBLE else View.INVISIBLE
+            playerNext.visibility = if (it.isSkipToNextEnabled) View.VISIBLE else View.INVISIBLE
+        })
+
         if (intent.hasExtra(RECORDING)) {
             val rec = intent.getSerializableExtra(RECORDING) as Recording
-            initRecording(rec)
+            viewModel.setMediaItem(rec)
         }
     }
 
@@ -60,6 +81,21 @@ class NowPlayingActivity : BaseActivity() {
         menuInflater.inflate(R.menu.menu_now_playing, menu)
         shareMenuItem = menu?.findItem(R.id.action_share)
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.action_share -> {
+                viewModel.nowPlaying.value?.let {
+                    val content = "${it.title}\n\n${it.shareUrl}"
+
+                    Helper.shareText(this, content)
+                }
+                true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+
     }
 
     private fun initUI() {
@@ -89,30 +125,28 @@ class NowPlayingActivity : BaseActivity() {
 
         })
 
-        recordingsListAdapter = UniversalAdapter(
-                { parent, _ -> RecordingHolder.inflate(parent) },
-                { vh, _, item ->
-                    vh.bind(item, RecordingType.FEATURED, object : RecordingHolder.MoreOptions {
-                        override fun play(item: Recording) {
-
-                        }
-
-                        override fun share(content: String) {
-                            Helper.shareText(this@NowPlayingActivity, content)
-                        }
-
-                        override fun favorite(enabled: Boolean) {
-                            //TODO: Implement
-                        }
-
-                    })
-                }
-        )
+        relatedListAdapter = RelatedListAdapter(this)
 
         seriesList.apply {
             vertical()
-            adapter = recordingsListAdapter
+            adapter = relatedListAdapter
         }
+
+        fab.setOnClickListener { viewModel.playPauseMedia() }
+        playerPrevious.setOnClickListener { viewModel.skipToPrevious() }
+        playerNext.setOnClickListener { viewModel.skipToNext() }
+    }
+
+    override fun play(item: Recording) {
+        viewModel.playMedia(item)
+    }
+
+    override fun share(content: String) {
+        Helper.shareText(this@NowPlayingActivity, content)
+    }
+
+    override fun favorite(enabled: Boolean) {
+        //TODO: Implement
     }
 
     @SuppressLint("SetTextI18n")
@@ -134,11 +168,7 @@ class NowPlayingActivity : BaseActivity() {
         presenterTxt.text = series?.title ?: presenter?.displayName
         description.text = recording.description
 
-        viewModel.listSeries(recording)
-
-        fab.setOnClickListener {
-            viewModel.playMedia(recording)
-        }
+        viewModel.listRelated(recording)
     }
 
     companion object {
@@ -146,7 +176,6 @@ class NowPlayingActivity : BaseActivity() {
         fun launch(context: Context, recording: Recording) {
             val intent = Intent(context, NowPlayingActivity::class.java)
             intent.putExtra(RECORDING, recording)
-            //NowPlayingViewModel.MEDIA_ID = recording.id
             context.startActivity(intent)
         }
     }

@@ -14,6 +14,7 @@ import com.tinashe.audioverse.utils.RxSchedulers
 import com.tinashe.audioverse.utils.ioThread
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 
@@ -104,6 +105,11 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
     override fun getSeries(seriesId: String): Observable<List<Recording>> {
         return audioVerseDb.recordingsDao().listSeries(seriesId)
                 .toObservable()
+                .subscribeOn(rxSchedulers.database)
+    }
+
+    override fun findRecording(id: String): Maybe<Recording> {
+        return audioVerseDb.recordingsDao().findById(id)
                 .subscribeOn(rxSchedulers.database)
     }
 

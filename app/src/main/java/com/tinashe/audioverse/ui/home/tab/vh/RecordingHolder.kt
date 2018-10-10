@@ -61,7 +61,7 @@ class RecordingHolder constructor(override val containerView: View) :
             menu.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.action_play -> itemView.performClick()
-                    R.id.action_share -> options.share("${recording.title}\n\n${recording.shareUrl!!}")
+                    R.id.action_share -> options.share("${recording.title}\n\n${recording.shareUrl}")
                 }
                 return@setOnMenuItemClickListener true
             }

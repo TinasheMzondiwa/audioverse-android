@@ -46,24 +46,39 @@ data class Recording(
     @Ignore
     var presenter: String = ""
         get() {
-            return if (presenters.isNotEmpty()) {
+            if (field.isNotEmpty()) {
+                return field
+            }
+
+            field =  if (presenters.isNotEmpty()) {
                 presenters.first().displayName
             } else
                 ""
+
+            return field
         }
 
     @Ignore
     var source: String = ""
         get() {
-            return if (mediaFiles.isNotEmpty()) {
+            if (field.isNotEmpty()) {
+                return field
+            }
+
+            field = if (mediaFiles.isNotEmpty()) {
                 mediaFiles.first().streamURL
             } else
                 ""
+
+            return field
         }
 
     @Ignore
     var image: String = ""
         get() {
+            if (field.isNotEmpty()) {
+                return field
+            }
             var series: Series? = null
             if (this.series.isNotEmpty()) {
                 series = this.series.first()
@@ -74,7 +89,9 @@ data class Recording(
                 presenter = this.presenters.first()
             }
 
-            return series?.photoMed ?: presenter?.photoMed ?: ""
+            field = series?.photoMed ?: presenter?.photoMed ?: ""
+
+            return field
         }
 
     var series = listOf<Series>()

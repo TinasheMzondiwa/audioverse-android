@@ -6,6 +6,7 @@ import com.tinashe.audioverse.data.model.Recording
 import com.tinashe.audioverse.data.model.RecordingType
 import com.tinashe.audioverse.data.model.SearchResult
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 import io.reactivex.Observable
 
 interface AudioVerseRepository {
@@ -19,4 +20,6 @@ interface AudioVerseRepository {
     fun getSeries(seriesId: String): Observable<List<Recording>>
 
     fun searchFor(query: String): Flowable<SearchResult>
+
+    fun findRecording(id: String): Maybe<Recording>
 }

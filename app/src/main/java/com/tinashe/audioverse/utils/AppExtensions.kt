@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.tinashe.audioverse.R
 import com.tinashe.audioverse.injection.ViewModelFactory
 import com.tinashe.audioverse.utils.glide.GlideApp
@@ -47,6 +48,7 @@ fun inflateView(@LayoutRes layoutResId: Int, parent: ViewGroup, attachToRoot: Bo
 fun ImageView.loadUrl(url: String?) {
     GlideApp.with(this)
             .load(url)
+            .transition(withCrossFade())
             .into(this)
 }
 

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
 import com.tinashe.audioverse.R
 import com.tinashe.audioverse.data.model.Presenter
 import com.tinashe.audioverse.data.model.Recording
@@ -39,6 +40,8 @@ class BaseTabFragment : Fragment() {
 
     private lateinit var recordingsListAdapter: UniversalAdapter<Recording, RecordingHolder>
 
+    private var listView: RecyclerView? = null
+
     companion object {
         fun newInstance(title: String, section: Section): BaseTabFragment {
             val fragment = BaseTabFragment()
@@ -51,12 +54,16 @@ class BaseTabFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        return when (section) {
+        val view = when (section) {
             Section.MY_LIST_HISTORY,
             Section.MY_LIST_PLAY_LISTS,
             Section.MY_LIST_FAVORITES -> inflater.inflate(R.layout.fragment_empty, container, false)
             else -> inflater.inflate(R.layout.fragment_list, container, false)
         }
+
+        listView = view.findViewById(R.id.listView)
+
+        return view
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,9 +79,9 @@ class BaseTabFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.recordings.observe(this, Observer {
+        viewModel.recordings.observe(this, Observer { list ->
 
-            it?.let {
+            list?.let {
 
                 if (it.isNotEmpty()) {
                     progressBar.hide()
@@ -83,22 +90,22 @@ class BaseTabFragment : Fragment() {
             } ?: progressBar.hide()
         })
 
-        viewModel.presenters.observe(this, Observer {
+        viewModel.presenters.observe(this, Observer { list ->
 
-            if (it?.isNotEmpty() != false) {
+            if (list?.isNotEmpty() != false) {
                 progressBar.hide()
             }
 
             val items = mutableListOf<Presenter>()
-            it?.forEach { items.add(it) }
+            list?.forEach { items.add(it) }
 
             sectionHolder.people = items
 
-            presentersListAdapter.submitList(it)
+            presentersListAdapter.submitList(list)
         })
 
-        viewModel.sectionHolder.value?.let {
-            when (it) {
+        viewModel.sectionHolder.value?.let { sec ->
+            when (sec) {
 
                 Section.MY_LIST_FAVORITES -> {
                 }
@@ -133,7 +140,7 @@ class BaseTabFragment : Fragment() {
                                 })
                             }
                     )
-                    listView.apply {
+                    listView?.apply {
                         vertical()
                         adapter = recordingsListAdapter
                     }
@@ -149,7 +156,7 @@ class BaseTabFragment : Fragment() {
                     sectionHolder = SectionHolder()
                     val sectionItemDecoration = RecyclerSectionItemDecoration(resources.getDimensionPixelSize(R.dimen.header), true, sectionHolder)
 
-                    listView.apply {
+                    listView?.apply {
                         vertical()
                         addItemDecoration(sectionItemDecoration)
                         adapter = presentersListAdapter
@@ -176,8 +183,6 @@ class BaseTabFragment : Fragment() {
     }
 
     fun scrollToTop() {
-        if (listView != null) {
-            listView.scrollToPosition(0)
-        }
+        listView?.scrollToPosition(0)
     }
 }

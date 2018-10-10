@@ -18,9 +18,9 @@
         android:id="@+id/playerThumbsUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_margin="@dimen/spacing_medium"
-        android:layout_alignParentStart="true"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="@dimen/spacing_micro"
         android:src="@drawable/outline_thumb_up" />
@@ -61,9 +61,9 @@
         android:id="@+id/playerThumbsDown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_margin="@dimen/spacing_medium"
-        android:layout_alignParentEnd="true"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="@dimen/spacing_micro"
         android:src="@drawable/outline_thumb_down" />

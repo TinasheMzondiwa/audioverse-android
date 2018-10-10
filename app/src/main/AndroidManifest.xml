@@ -15,7 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AudioVerse"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".ui.splash.SplashActivity">
+        <activity
+            android:name=".ui.splash.SplashActivity"
+            android:theme="@style/Theme.AudioVerse.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -68,6 +70,10 @@
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
+
+        <meta-data
+            android:name="com.google.android.gms.car.notification.SmallIcon"
+            android:resource="@drawable/ic_av_stat_icon" />
 
     </application>
 

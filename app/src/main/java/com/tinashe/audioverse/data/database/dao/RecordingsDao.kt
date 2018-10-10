@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.tinashe.audioverse.data.model.Recording
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 
 @Dao
 interface RecordingsDao : BaseDao<Recording> {
@@ -27,4 +28,7 @@ interface RecordingsDao : BaseDao<Recording> {
 
     @Query("SELECT * FROM recordings WHERE title LIKE :query")
     fun search(query: String): Flowable<List<Recording>>
+
+    @Query("SELECT * FROM recordings WHERE id = :id LIMIT 1")
+    fun findById(id: String): Maybe<Recording>
 }

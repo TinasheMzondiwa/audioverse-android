@@ -2,11 +2,11 @@ package com.tinashe.audioverse.ui.player
 
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.tinashe.audioverse.R
 import com.tinashe.audioverse.data.model.Recording
 import com.tinashe.audioverse.data.repository.AudioVerseRepository
 import com.tinashe.audioverse.media.EMPTY_PLAYBACK_STATE
@@ -26,7 +26,10 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
                                               private val rxSchedulers: RxSchedulers,
                                               mediaSessionConnection: MediaSessionConnection) : RxViewModel() {
 
-    var series = MutableLiveData<List<Recording>>()
+    var relatedMedia = MutableLiveData<List<Recording>>()
+
+    var playbackState = MutableLiveData<PlaybackStateCompat>()
+    var nowPlaying = MutableLiveData<Recording>()
 
     private var mediaId = "123"
 
@@ -34,7 +37,25 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
 
     }
 
-    fun listSeries(recording: Recording) {
+    /**
+     * When [MediaSessionConnection] is connected we want to immediately play this recording.
+     *
+     * We also want to save it as the current [nowPlaying] item
+     */
+    fun setMediaItem(recording: Recording) {
+        nowPlaying.postValue(recording)
+
+        mediaSessionConnection.isConnected.value?.let {
+            if (it) {
+                playMedia(recording)
+            }
+        }
+    }
+
+    /**
+     * List recordings relatedMedia to the current one playing
+     */
+    fun listRelated(recording: Recording) {
         var recordingsObservable: Observable<List<Recording>>? = null
         if (recording.series.isNotEmpty() && recording.seriesId?.isNotEmpty() == true) {
             recordingsObservable = repository.getSeries(recording.seriesId!!)
@@ -43,20 +64,29 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
         }
 
         if (recordingsObservable == null) {
-            series.postValue(emptyList())
+            relatedMedia.postValue(emptyList())
             return
         }
 
         val disposable = recordingsObservable
                 .observeOn(rxSchedulers.main)
                 .subscribe({
-                    series.postValue(it)
+                    relatedMedia.postValue(it)
                 }, {
                     Timber.e(it)
-                    series.postValue(emptyList())
+                    relatedMedia.postValue(emptyList())
                 })
 
         disposables.add(disposable)
+    }
+
+    /**
+     * Play / Pause the current [nowPlaying] item
+     */
+    fun playPauseMedia() {
+        nowPlaying.value?.let {
+            playMedia(it)
+        }
     }
 
     /**
@@ -84,54 +114,57 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
         }
     }
 
+    fun skipToPrevious() {
+        mediaSessionConnection.transportControls.skipToPrevious()
+    }
 
-    /**
-     * Use a backing property so consumers of mediaItems only get a [LiveData] instance so
-     * they don't inadvertently modify it.
-     */
-    private val _mediaItems = MutableLiveData<List<MediaItemData>>()
-            .apply { postValue(emptyList()) }
-    val mediaItems: LiveData<List<MediaItemData>> = _mediaItems
+    fun skipToNext() {
+        mediaSessionConnection.transportControls.skipToNext()
+    }
+
 
     private val subscriptionCallback = object : MediaBrowserCompat.SubscriptionCallback() {
         override fun onChildrenLoaded(parentId: String, children: List<MediaBrowserCompat.MediaItem>) {
-            val itemsList = children.map { child ->
-                MediaItemData(child.mediaId!!,
-                        child.description.title.toString(),
-                        child.description.subtitle.toString(),
-                        child.description.iconUri!!,
-                        child.isBrowsable,
-                        getResourceForMediaId(child.mediaId!!))
-            }
-            _mediaItems.postValue(itemsList)
+            Timber.d("CHILDREN LOADED")
         }
     }
 
     /**
-     * When the session's [PlaybackStateCompat] changes, the [mediaItems] need to be updated
-     * so the correct [MediaItemData.playbackRes] is displayed on the active item.
-     * (i.e.: play/pause button or blank)
+     * When the session's [PlaybackStateCompat] changes, the [playbackState] needs to be updated
      */
     private val playbackStateObserver = Observer<PlaybackStateCompat> {
-        val playbackState = it ?: EMPTY_PLAYBACK_STATE
+        val state = it ?: EMPTY_PLAYBACK_STATE
         val metadata = mediaSessionConnection.nowPlaying.value ?: NOTHING_PLAYING
-        _mediaItems.postValue(updateState(playbackState, metadata))
+
+        playbackState.postValue(state)
+        findRecording(metadata.id ?: "")
     }
 
     /**
-     * When the session's [MediaMetadataCompat] changes, the [mediaItems] need to be updated
-     * as it means the currently active item has changed. As a result, the new, and potentially
-     * old item (if there was one), both need to have their [MediaItemData.playbackRes]
-     * changed. (i.e.: play/pause button or blank)
+     * When the session's [MediaMetadataCompat] changes, the [nowPlaying] needs to be updated
      */
     private val mediaMetadataObserver = Observer<MediaMetadataCompat> {
-        val playbackState = mediaSessionConnection.playbackState.value ?: EMPTY_PLAYBACK_STATE
+        val state = mediaSessionConnection.playbackState.value ?: EMPTY_PLAYBACK_STATE
         val metadata = it ?: NOTHING_PLAYING
-        _mediaItems.postValue(updateState(playbackState, metadata))
+
+        findRecording(metadata.id ?: "")
+        playbackState.postValue(state)
+    }
+
+    private fun findRecording(mediaId: String) {
+        val disposable = repository.findRecording(mediaId)
+                .observeOn(rxSchedulers.main)
+                .subscribe({
+                    nowPlaying.postValue(it)
+                }, {
+                    Timber.e(it)
+                })
+
+        disposables.add(disposable)
     }
 
     /**
-     * Because there's a complex dance between this [ViewModel] and the [MediaSessionConnection]
+     * Because there's a complex dance between this [NowPlayingViewModel] and the [MediaSessionConnection]
      * (which is wrapping a [MediaBrowserCompat] object), the usual guidance of using
      * [Transformations] doesn't quite work.
      *
@@ -141,6 +174,9 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
      * [subscriptionCallback] (defined above) is called if/when the children of this
      * ViewModel's [mediaId] changes.
      *
+     * [mediaSessionConnection#isConnected] is called when [MediaBrowserCompat] is connected meaning we can now
+     * interact with its [MediaControllerCompat] to play media.
+     *
      * [MediaSessionConnection.playbackState] changes state based on the playback state of
      * the player, which can change the [MediaItemData.playbackRes]s in the list.
      *
@@ -149,6 +185,11 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
      */
     private val mediaSessionConnection: MediaSessionConnection = mediaSessionConnection.also {
         it.subscribe(mediaId, subscriptionCallback)
+        it.isConnected.observeForever { connected ->
+            if (connected) {
+                nowPlaying.value?.let { rec -> playMedia(rec) }
+            }
+        }
 
         it.playbackState.observeForever(playbackStateObserver)
         it.nowPlaying.observeForever(mediaMetadataObserver)
@@ -156,10 +197,8 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
 
     /**
      * Since we use [LiveData.observeForever] above (in [mediaSessionConnection]), we want
-     * to call [LiveData.removeObserver] here to prevent leaking resources when the [ViewModel]
+     * to call [LiveData.removeObserver] here to prevent leaking resources when the [NowPlayingViewModel]
      * is not longer in use.
-     *
-     * For more details, see the kdoc on [mediaSessionConnection] above.
      */
     override fun onCleared() {
         super.onCleared()
@@ -170,33 +209,5 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
 
         // And then, finally, unsubscribe the media ID that was being watched.
         mediaSessionConnection.unsubscribe(mediaId, subscriptionCallback)
-    }
-
-    private fun getResourceForMediaId(mediaId: String): Int {
-        val isActive = mediaId == mediaSessionConnection.nowPlaying.value?.id
-        val isPlaying = mediaSessionConnection.playbackState.value?.isPlaying ?: false
-        return when {
-            !isActive -> NO_RES
-            isPlaying -> R.drawable.ic_pause
-            else -> R.drawable.ic_play
-        }
-    }
-
-    private fun updateState(playbackState: PlaybackStateCompat,
-                            mediaMetadata: MediaMetadataCompat): List<MediaItemData> {
-
-        val newResId = when (playbackState.isPlaying) {
-            true -> R.drawable.ic_pause
-            else -> R.drawable.ic_play
-        }
-
-        return mediaItems.value?.map {
-            val useResId = if (it.mediaId == mediaMetadata.id) newResId else NO_RES
-            it.copy(playbackRes = useResId)
-        } ?: emptyList()
-    }
-
-    companion object {
-        private const val NO_RES = 0
     }
 }
