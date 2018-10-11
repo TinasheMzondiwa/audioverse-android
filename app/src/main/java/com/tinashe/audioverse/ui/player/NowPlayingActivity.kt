@@ -26,6 +26,7 @@ import com.tinashe.audioverse.utils.custom.AppBarStateChangeListener
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_now_playing.*
 import kotlinx.android.synthetic.main.include_player_vew.*
+import timber.log.Timber
 import javax.inject.Inject
 
 class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
@@ -69,6 +70,9 @@ class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
 
             playerPrevious.visibility = if (it.isSkipToPreviousEnabled) View.VISIBLE else View.INVISIBLE
             playerNext.visibility = if (it.isSkipToNextEnabled) View.VISIBLE else View.INVISIBLE
+        })
+        viewModel.thumbedUp.observe(this, Observer {
+            Timber.d("RATING: $it")
         })
 
         if (intent.hasExtra(RECORDING)) {

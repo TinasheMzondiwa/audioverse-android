@@ -29,6 +29,7 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
 
     var playbackState = MutableLiveData<PlaybackStateCompat>()
     var nowPlaying = MutableLiveData<Recording>()
+    var thumbedUp = MutableLiveData<Boolean>()
 
     private var mediaId = "123"
 
@@ -155,6 +156,7 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
                 .observeOn(rxSchedulers.main)
                 .subscribe({
                     nowPlaying.postValue(it)
+                    thumbedUp.postValue(it.favorite)
                 }, {
                     Timber.e(it)
                 })
