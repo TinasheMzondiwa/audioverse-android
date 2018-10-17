@@ -14,6 +14,7 @@ import com.tinashe.audioverse.data.model.RecordingType
 import com.tinashe.audioverse.data.model.Section
 import com.tinashe.audioverse.injection.ViewModelFactory
 import com.tinashe.audioverse.ui.home.tab.vh.RecordingHolder
+import com.tinashe.audioverse.ui.player.NowPlayingActivity
 import com.tinashe.audioverse.ui.presenter.PresenterActivity
 import com.tinashe.audioverse.utils.Helper
 import com.tinashe.audioverse.utils.custom.RecyclerSectionItemDecoration
@@ -122,8 +123,8 @@ class BaseTabFragment : Fragment() {
                             { vh, _, item ->
                                 vh.bind(item, RecordingType.FEATURED, object : RecordingHolder.MoreOptions {
                                     override fun play(item: Recording) {
-                                        context?.let {
-                                            Helper.playRecording(it, item)
+                                        activity?.let {
+                                            NowPlayingActivity.launch(it, item)
                                         }
                                     }
 

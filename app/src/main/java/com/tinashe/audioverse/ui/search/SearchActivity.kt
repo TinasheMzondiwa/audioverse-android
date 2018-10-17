@@ -12,6 +12,7 @@ import com.tinashe.audioverse.data.model.Recording
 import com.tinashe.audioverse.injection.ViewModelFactory
 import com.tinashe.audioverse.ui.base.BaseActivity
 import com.tinashe.audioverse.ui.home.tab.vh.RecordingHolder
+import com.tinashe.audioverse.ui.player.NowPlayingActivity
 import com.tinashe.audioverse.ui.presenter.PresenterActivity
 import com.tinashe.audioverse.utils.Helper
 import com.tinashe.audioverse.utils.getViewModel
@@ -53,7 +54,7 @@ class SearchActivity : BaseActivity() {
 
         listAdapter = SearchListAdapter(object : RecordingHolder.MoreOptions {
             override fun play(item: Recording) {
-                Helper.playRecording(this@SearchActivity, item)
+                NowPlayingActivity.launch(this@SearchActivity, item)
             }
 
             override fun share(content: String) {

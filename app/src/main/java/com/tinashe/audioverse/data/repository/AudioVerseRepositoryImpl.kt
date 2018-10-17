@@ -8,6 +8,7 @@ import com.tinashe.audioverse.data.model.Presenter
 import com.tinashe.audioverse.data.model.Recording
 import com.tinashe.audioverse.data.model.RecordingType
 import com.tinashe.audioverse.data.model.SearchResult
+import com.tinashe.audioverse.data.repository.helper.NetworkHelper
 import com.tinashe.audioverse.data.repository.helper.PresentersDataFactory
 import com.tinashe.audioverse.utils.Helper
 import com.tinashe.audioverse.utils.RxSchedulers
@@ -20,10 +21,11 @@ import io.reactivex.functions.BiFunction
 
 class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerseApi,
                                            private val audioVerseDb: AudioVerseDb,
-                                           private val rxSchedulers: RxSchedulers) : AudioVerseRepository {
+                                           private val rxSchedulers: RxSchedulers,
+                                           private val networkHelper: NetworkHelper) : AudioVerseRepository {
 
     override fun getPresenters(): Flowable<PagedList<Presenter>> {
-        val sourceFactory = PresentersDataFactory(audioVerseApi, audioVerseDb)
+        val sourceFactory = PresentersDataFactory(audioVerseApi, audioVerseDb, networkHelper)
 
         return RxPagedListBuilder(sourceFactory, pagedListConfig)
                 .setFetchScheduler(rxSchedulers.network)
@@ -52,6 +54,10 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
                 .subscribeOn(rxSchedulers.database)
                 .flatMap { list -> Flowable.just(list.asSequence().sortedBy { it.publishDate }.filter { it.presenters.isNotEmpty() && it.presenters.first().id == presenterId }.toList()) }
 
+
+        if (!networkHelper.hasConnection()) {
+            return db
+        }
 
         return Flowable.merge(db, api.toFlowable(BackpressureStrategy.LATEST))
     }
@@ -90,6 +96,10 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
         val db = audioVerseDb.recordingsDao().listByTag(tag)
                 .subscribeOn(rxSchedulers.database)
                 .toObservable()
+
+        if (!networkHelper.hasConnection()) {
+            return db
+        }
 
         return Observable.merge(db, apiResponse)
     }

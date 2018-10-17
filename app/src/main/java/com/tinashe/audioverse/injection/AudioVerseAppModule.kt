@@ -9,6 +9,7 @@ import com.tinashe.audioverse.data.database.AudioVerseDb
 import com.tinashe.audioverse.data.database.dao.RecordingsDao
 import com.tinashe.audioverse.data.repository.AudioVerseRepository
 import com.tinashe.audioverse.data.repository.AudioVerseRepositoryImpl
+import com.tinashe.audioverse.data.repository.helper.NetworkHelper
 import com.tinashe.audioverse.media.MediaSessionConnection
 import com.tinashe.audioverse.media.MusicService
 import com.tinashe.audioverse.utils.RxSchedulers
@@ -41,8 +42,8 @@ internal class AudioVerseAppModule {
 
     @Provides
     @Singleton
-    fun provideRepository(api: AudioVerseApi, db: AudioVerseDb, schedulers: RxSchedulers):
-            AudioVerseRepository = AudioVerseRepositoryImpl(api, db, schedulers)
+    fun provideRepository(api: AudioVerseApi, db: AudioVerseDb, schedulers: RxSchedulers, context: Context):
+            AudioVerseRepository = AudioVerseRepositoryImpl(api, db, schedulers, NetworkHelper(context))
 
     @Provides
     @Singleton

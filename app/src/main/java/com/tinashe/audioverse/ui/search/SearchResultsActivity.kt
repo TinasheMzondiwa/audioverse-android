@@ -11,6 +11,7 @@ import com.tinashe.audioverse.data.model.RecordingType
 import com.tinashe.audioverse.ui.base.BaseActivity
 import com.tinashe.audioverse.ui.home.tab.vh.PresenterHolder
 import com.tinashe.audioverse.ui.home.tab.vh.RecordingHolder
+import com.tinashe.audioverse.ui.player.NowPlayingActivity
 import com.tinashe.audioverse.ui.presenter.PresenterActivity
 import com.tinashe.audioverse.utils.Helper
 import com.tinashe.audioverse.utils.custom.UniversalAdapter
@@ -65,7 +66,7 @@ class SearchResultsActivity : BaseActivity() {
                         { vh, _, item ->
                             vh.bind(item, RecordingType.NEW, object : RecordingHolder.MoreOptions {
                                 override fun play(item: Recording) {
-                                    Helper.playRecording(this@SearchResultsActivity, item)
+                                    NowPlayingActivity.launch(this@SearchResultsActivity, item)
                                 }
 
                                 override fun share(content: String) {
@@ -93,9 +94,8 @@ class SearchResultsActivity : BaseActivity() {
         }
 
         resultsListView.addOnScrollListener(appBarElevation)
-        val query = intent.getCharSequenceExtra(ARG_QUERY)
-        query?.let {
-            title = "'$query' in $title"
+        intent.getCharSequenceExtra(ARG_QUERY)?.let {
+            title = "'$it' in $title"
         }
 
     }

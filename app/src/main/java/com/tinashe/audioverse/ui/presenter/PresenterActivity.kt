@@ -17,6 +17,7 @@ import com.tinashe.audioverse.data.model.RecordingType
 import com.tinashe.audioverse.injection.ViewModelFactory
 import com.tinashe.audioverse.ui.base.BaseActivity
 import com.tinashe.audioverse.ui.home.tab.vh.RecordingHolder
+import com.tinashe.audioverse.ui.player.NowPlayingActivity
 import com.tinashe.audioverse.utils.*
 import com.tinashe.audioverse.utils.custom.UniversalAdapter
 import dagger.android.AndroidInjection
@@ -82,7 +83,7 @@ class PresenterActivity : BaseActivity() {
                 { vh, _, item ->
                     vh.bind(item, RecordingType.PRESENTER, object : RecordingHolder.MoreOptions {
                         override fun play(item: Recording) {
-                            Helper.playRecording(this@PresenterActivity, item)
+                            NowPlayingActivity.launch(this@PresenterActivity, item)
                         }
 
                         override fun share(content: String) {
@@ -105,7 +106,7 @@ class PresenterActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        if(listAdapter.itemCount > 0){
+        if (listAdapter.itemCount > 0) {
             progressBar.hide()
         }
     }
