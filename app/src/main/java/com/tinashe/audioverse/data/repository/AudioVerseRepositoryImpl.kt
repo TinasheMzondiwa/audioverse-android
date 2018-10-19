@@ -33,6 +33,13 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
     }
 
     override fun getRecordings(presenterId: String): Flowable<List<Recording>> {
+
+        val db = audioVerseDb.recordingsDao().listAll()
+                .subscribeOn(rxSchedulers.database)
+                .flatMap { list -> Flowable.just(list.asSequence().sortedBy { it.publishDate }
+                        .filter { it.presenters.isNotEmpty() && it.presenters.first().id == presenterId }
+                        .toList()) }
+
         val api = audioVerseApi.getPresenterRecordings(presenterId)
                 .subscribeOn(rxSchedulers.network)
                 .flatMap { response ->
@@ -47,12 +54,9 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
                             Observable.just(recordings.sortedBy { it.publishDate })
                         }
                     } else {
-                        Observable.error(RuntimeException(""))
+                        db.toObservable()
                     }
                 }
-        val db = audioVerseDb.recordingsDao().listAll()
-                .subscribeOn(rxSchedulers.database)
-                .flatMap { list -> Flowable.just(list.asSequence().sortedBy { it.publishDate }.filter { it.presenters.isNotEmpty() && it.presenters.first().id == presenterId }.toList()) }
 
 
         if (!networkHelper.hasConnection()) {
@@ -74,6 +78,10 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
 
         val tag = Helper.getTag(type)
 
+        val db = audioVerseDb.recordingsDao().listByTag(tag)
+                .subscribeOn(rxSchedulers.database)
+                .toObservable()
+
         val apiResponse = api.subscribeOn(rxSchedulers.network)
                 .flatMap { response ->
                     if (response.isSuccessful) {
@@ -89,13 +97,9 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
                             Observable.just(recordings.sortedBy { it.publishDate })
                         }
                     } else {
-                        Observable.error(RuntimeException(""))
+                        db
                     }
                 }.cache()
-
-        val db = audioVerseDb.recordingsDao().listByTag(tag)
-                .subscribeOn(rxSchedulers.database)
-                .toObservable()
 
         if (!networkHelper.hasConnection()) {
             return db

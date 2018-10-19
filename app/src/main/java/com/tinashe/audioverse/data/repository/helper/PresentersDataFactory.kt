@@ -13,16 +13,16 @@ class PresentersDataFactory constructor(private val audioVerseApi: AudioVerseApi
                                         private val audioVerseDb: AudioVerseDb,
                                         private val networkHelper: NetworkHelper) : DataSource.Factory<Int, Presenter>() {
 
-    val sourceLiveData = MutableLiveData<PresentersSource>()
+    private val sourceLiveData = MutableLiveData<PresentersSource>()
 
     override fun create(): DataSource<Int, Presenter> {
 
-        val source = PresentersSource(audioVerseApi, audioVerseDb,  networkHelper)
+        val source = PresentersSource(audioVerseApi, audioVerseDb, networkHelper)
         sourceLiveData.postValue(source)
         return source
     }
 
-    class PresentersSource constructor(private val api: AudioVerseApi,
+    inner class PresentersSource constructor(private val api: AudioVerseApi,
                                        private val database: AudioVerseDb,
                                        private val networkHelper: NetworkHelper) : ItemKeyedDataSource<Int, Presenter>() {
 
@@ -41,7 +41,7 @@ class PresentersDataFactory constructor(private val audioVerseApi: AudioVerseApi
                         }
                     }
                 } catch (ex: IOException) {
-                    Timber.d(ex, ex.message)
+                    Timber.d(ex)
                 }
 
             } else {
@@ -50,7 +50,9 @@ class PresentersDataFactory constructor(private val audioVerseApi: AudioVerseApi
         }
 
         override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Presenter>) {
-            //
+            val db = database.presentersDao().listAllDirect()
+
+            callback.onResult(db)
         }
 
         override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Presenter>) {
