@@ -2,6 +2,7 @@ package com.tinashe.audioverse.ui.player
 
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.RatingCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.LiveData
@@ -129,6 +130,9 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
             it.favorite = true
             thumbedUp.postValue(it.favorite)
             updateRecording(it)
+
+            mediaSessionConnection.transportControls
+                    .setRating(RatingCompat.newThumbRating(true))
         }
     }
 
@@ -139,6 +143,9 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
             it.favorite = false
             thumbedUp.postValue(it.favorite)
             updateRecording(it)
+
+            mediaSessionConnection.transportControls
+                    .setRating(RatingCompat.newThumbRating(false))
         }
     }
 
