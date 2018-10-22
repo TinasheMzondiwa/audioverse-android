@@ -1,6 +1,5 @@
 package com.tinashe.audioverse.ui.player
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -26,7 +25,6 @@ import com.tinashe.audioverse.utils.custom.AppBarStateChangeListener
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_now_playing.*
 import kotlinx.android.synthetic.main.include_player_vew.*
-import timber.log.Timber
 import javax.inject.Inject
 
 class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
@@ -71,8 +69,22 @@ class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
             playerPrevious.visibility = if (it.isSkipToPreviousEnabled) View.VISIBLE else View.INVISIBLE
             playerNext.visibility = if (it.isSkipToNextEnabled) View.VISIBLE else View.INVISIBLE
         })
-        viewModel.thumbedUp.observe(this, Observer {
-            Timber.d("RATING: $it")
+        viewModel.thumbedUp.observe(this, Observer { thumbedUp ->
+
+            when (thumbedUp) {
+                true -> {
+                    playerThumbsUp.setImageResource(R.drawable.round_thumb_up)
+                    playerThumbsDown.setImageResource(R.drawable.outline_thumb_down)
+                }
+                false -> {
+                    playerThumbsUp.setImageResource(R.drawable.outline_thumb_up)
+                    playerThumbsDown.setImageResource(R.drawable.round_thumb_down)
+                }
+                else -> {
+                    playerThumbsUp.setImageResource(R.drawable.outline_thumb_up)
+                    playerThumbsDown.setImageResource(R.drawable.outline_thumb_down)
+                }
+            }
         })
 
         if (intent.hasExtra(RECORDING)) {
@@ -126,7 +138,6 @@ class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
                     }
                 }
             }
-
         })
 
         relatedListAdapter = RelatedListAdapter(this)
@@ -139,6 +150,9 @@ class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
         fab.setOnClickListener { viewModel.playPauseMedia() }
         playerPrevious.setOnClickListener { viewModel.skipToPrevious() }
         playerNext.setOnClickListener { viewModel.skipToNext() }
+
+        playerThumbsDown.setOnClickListener { viewModel.thumbDownMedia() }
+        playerThumbsUp.setOnClickListener { viewModel.thumbUpMedia() }
     }
 
     override fun play(item: Recording) {
@@ -153,7 +167,6 @@ class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
         //TODO: Implement
     }
 
-    @SuppressLint("SetTextI18n")
     private fun initRecording(recording: Recording) {
         var series: Series? = null
         if (recording.series.isNotEmpty()) {
@@ -177,6 +190,7 @@ class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
 
     companion object {
         private const val RECORDING = "arg:recording"
+
         fun launch(context: Context, recording: Recording) {
             val intent = Intent(context, NowPlayingActivity::class.java)
             intent.putExtra(RECORDING, recording)

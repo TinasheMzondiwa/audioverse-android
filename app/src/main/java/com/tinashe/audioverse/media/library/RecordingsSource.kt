@@ -99,7 +99,7 @@ fun MediaMetadataCompat.Builder.from(recording: Recording): MediaMetadataCompat.
     displaySubtitle = recording.presenter
     displayDescription = recording.description
     displayIconUri = recording.image
-    userRating = RatingCompat.newThumbRating(recording.favorite)
+    userRating = RatingCompat.newThumbRating(recording.favorite ?: false)
 
     // Add downloadStatus to force the creation of an "extras" bundle in the resulting
     // MediaMetadataCompat object. This is needed to send accurate metadata to the

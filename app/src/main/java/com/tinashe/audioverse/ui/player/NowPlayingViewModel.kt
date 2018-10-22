@@ -122,6 +122,36 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
         mediaSessionConnection.transportControls.skipToNext()
     }
 
+    fun thumbUpMedia() {
+        nowPlaying.value?.let {
+            if (it.favorite == true) return@let
+
+            it.favorite = true
+            thumbedUp.postValue(it.favorite)
+            updateRecording(it)
+        }
+    }
+
+    fun thumbDownMedia() {
+        nowPlaying.value?.let {
+            if (it.favorite == false) return@let
+
+            it.favorite = false
+            thumbedUp.postValue(it.favorite)
+            updateRecording(it)
+        }
+    }
+
+    private fun updateRecording(recording: Recording) {
+        val disposable = repository.updateRecording(recording)
+                .observeOn(rxSchedulers.main)
+                .subscribe({}, {
+                    Timber.e(it)
+                })
+
+        disposables.add(disposable)
+    }
+
 
     private val subscriptionCallback = object : MediaBrowserCompat.SubscriptionCallback() {
         override fun onChildrenLoaded(parentId: String, children: List<MediaBrowserCompat.MediaItem>) {

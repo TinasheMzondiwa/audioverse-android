@@ -5,6 +5,7 @@ import com.tinashe.audioverse.data.model.Presenter
 import com.tinashe.audioverse.data.model.Recording
 import com.tinashe.audioverse.data.model.RecordingType
 import com.tinashe.audioverse.data.model.SearchResult
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Observable
@@ -22,4 +23,6 @@ interface AudioVerseRepository {
     fun searchFor(query: String): Flowable<SearchResult>
 
     fun findRecording(id: String): Maybe<Recording>
+
+    fun updateRecording(recording: Recording): Completable
 }

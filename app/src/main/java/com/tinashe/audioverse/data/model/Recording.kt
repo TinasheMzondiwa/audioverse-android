@@ -117,5 +117,5 @@ data class Recording(
 
     var tag: String? = null
 
-    var favorite: Boolean = false
+    var favorite: Boolean? = false
 }

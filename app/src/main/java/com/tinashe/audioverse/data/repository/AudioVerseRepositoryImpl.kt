@@ -13,10 +13,7 @@ import com.tinashe.audioverse.data.repository.helper.PresentersDataFactory
 import com.tinashe.audioverse.utils.Helper
 import com.tinashe.audioverse.utils.RxSchedulers
 import com.tinashe.audioverse.utils.ioThread
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import io.reactivex.Maybe
-import io.reactivex.Observable
+import io.reactivex.*
 import io.reactivex.functions.BiFunction
 
 class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerseApi,
@@ -36,9 +33,11 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
 
         val db = audioVerseDb.recordingsDao().listAll()
                 .subscribeOn(rxSchedulers.database)
-                .flatMap { list -> Flowable.just(list.asSequence().sortedBy { it.publishDate }
-                        .filter { it.presenters.isNotEmpty() && it.presenters.first().id == presenterId }
-                        .toList()) }
+                .flatMap { list ->
+                    Flowable.just(list.asSequence().sortedBy { it.publishDate }
+                            .filter { it.presenters.isNotEmpty() && it.presenters.first().id == presenterId }
+                            .toList())
+                }
 
         val api = audioVerseApi.getPresenterRecordings(presenterId)
                 .subscribeOn(rxSchedulers.network)
@@ -125,6 +124,12 @@ class AudioVerseRepositoryImpl constructor(private val audioVerseApi: AudioVerse
     override fun findRecording(id: String): Maybe<Recording> {
         return audioVerseDb.recordingsDao().findById(id)
                 .subscribeOn(rxSchedulers.database)
+    }
+
+    override fun updateRecording(recording: Recording): Completable {
+        return Completable.fromAction {
+            audioVerseDb.recordingsDao().update(recording)
+        }.subscribeOn(rxSchedulers.database)
     }
 
     companion object {
