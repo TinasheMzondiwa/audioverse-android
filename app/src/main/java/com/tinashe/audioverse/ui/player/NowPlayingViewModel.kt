@@ -1,5 +1,7 @@
 package com.tinashe.audioverse.ui.player
 
+import android.content.Context
+import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.RatingCompat
@@ -8,8 +10,11 @@ import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.google.android.exoplayer2.offline.DownloadService
+import com.google.android.exoplayer2.offline.ProgressiveDownloadAction
 import com.tinashe.audioverse.data.model.Recording
 import com.tinashe.audioverse.data.repository.AudioVerseRepository
+import com.tinashe.audioverse.media.AvDownloadService
 import com.tinashe.audioverse.media.EMPTY_PLAYBACK_STATE
 import com.tinashe.audioverse.media.MediaSessionConnection
 import com.tinashe.audioverse.media.NOTHING_PLAYING
@@ -157,6 +162,15 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
                 })
 
         disposables.add(disposable)
+    }
+
+    fun downloadNowPlaying(context: Context) {
+        nowPlaying.value?.let {
+            val uri =  Uri.parse(it.source)
+
+            val downloadAction = ProgressiveDownloadAction(uri, false, null, null)
+            DownloadService.startWithAction(context.applicationContext, AvDownloadService::class.java, downloadAction, false)
+        }
     }
 
 

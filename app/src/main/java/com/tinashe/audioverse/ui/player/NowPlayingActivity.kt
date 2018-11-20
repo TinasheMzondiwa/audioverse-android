@@ -27,6 +27,7 @@ import kotlinx.android.synthetic.main.activity_now_playing.*
 import kotlinx.android.synthetic.main.include_player_vew.*
 import javax.inject.Inject
 
+
 class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
 
     @Inject
@@ -145,6 +146,10 @@ class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
         seriesList.apply {
             vertical()
             adapter = relatedListAdapter
+        }
+
+        makeOfflinePin.setOnClickListener {
+            viewModel.downloadNowPlaying(this)
         }
 
         fab.setOnClickListener { viewModel.playPauseMedia() }

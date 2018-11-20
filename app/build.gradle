@@ -5,6 +5,10 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 28
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         applicationId "com.tinashe.audioverse"
         minSdkVersion 21
@@ -86,6 +90,9 @@ dependencies {
     implementation "com.google.android.exoplayer:exoplayer-core:${versions.exoplayer}"
     implementation "com.google.android.exoplayer:exoplayer-ui:${versions.exoplayer}"
     implementation "com.google.android.exoplayer:extension-mediasession:${versions.exoplayer}"
+    implementation "com.google.android.exoplayer:exoplayer-dash:${versions.exoplayer}"
+    implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:${versions.exoplayer}"
+    implementation "com.google.android.exoplayer:exoplayer-hls:${versions.exoplayer}"
 
     implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.18'
 

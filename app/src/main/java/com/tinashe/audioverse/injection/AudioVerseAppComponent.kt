@@ -8,8 +8,8 @@ import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AudioVerseAppModule::class, AndroidInjectionModule::class,
-    AndroidSupportInjectionModule::class, InjectionBinder::class])
+@Component(modules = [AudioVerseAppModule::class, OfflineModule::class,
+    AndroidInjectionModule::class, AndroidSupportInjectionModule::class, InjectionBinder::class])
 interface AudioVerseAppComponent {
 
     @Component.Builder

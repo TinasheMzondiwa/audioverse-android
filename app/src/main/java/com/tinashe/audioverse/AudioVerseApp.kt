@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.app.Service
 import androidx.fragment.app.Fragment
+import com.google.android.exoplayer2.offline.DownloadManager
 import com.tinashe.audioverse.injection.DaggerAudioVerseAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -23,6 +24,9 @@ class AudioVerseApp : Application(), HasActivityInjector, HasSupportFragmentInje
 
     @Inject
     lateinit var servicesInjector: DispatchingAndroidInjector<Service>
+
+    @Inject
+    lateinit var downloadManager: DownloadManager
 
     override fun activityInjector(): AndroidInjector<Activity> = activityInjector
 

@@ -38,8 +38,7 @@ import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
+import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
 import com.tinashe.audioverse.data.database.dao.RecordingsDao
 import com.tinashe.audioverse.media.NotificationBuilder.Companion.NOW_PLAYING_NOTIFICATION
 import com.tinashe.audioverse.media.audiofocus.AudioFocusExoPlayerDecorator
@@ -72,6 +71,9 @@ class MusicService : MediaBrowserServiceCompat() {
     @Inject
     lateinit var recordingsDao: RecordingsDao
 
+    @Inject
+    lateinit var dataSourceFactory: CacheDataSourceFactory
+
     private var isForegroundService = false
 
     private val audioAttributes = AudioAttributesCompat.Builder()
@@ -84,7 +86,7 @@ class MusicService : MediaBrowserServiceCompat() {
         val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         AudioFocusExoPlayerDecorator(audioAttributes,
                 audioManager,
-                ExoPlayerFactory.newSimpleInstance(DefaultRenderersFactory(this),
+                ExoPlayerFactory.newSimpleInstance(this, DefaultRenderersFactory(this),
                         DefaultTrackSelector(),
                         DefaultLoadControl()))
     }
@@ -133,8 +135,8 @@ class MusicService : MediaBrowserServiceCompat() {
         // ExoPlayer will manage the MediaSession for us.
         mediaSessionConnector = MediaSessionConnector(mediaSession).also {
             // Produces DataSource instances through which media data is loaded.
-            val dataSourceFactory = DefaultDataSourceFactory(
-                    this, Util.getUserAgent(this, AVMP_USER_AGENT), null)
+            /* val dataSourceFactory = DefaultDataSourceFactory(
+                     this, Util.getUserAgent(this, AVMP_USER_AGENT), null)*/
 
             // Create the PlaybackPreparer of the media session connector.
             val playbackPreparer = UampPlaybackPreparer(
@@ -163,7 +165,7 @@ class MusicService : MediaBrowserServiceCompat() {
      * Returns the "root" media ID that the client should request to get the list of
      * [MediaItem]s to browse/play.
      *
-     * In our case we allow browsing of all available [Recording]s
+     * In our case we allow browsing of all available [com.tinashe.audioverse.data.model.Recording]s
      */
     override fun onGetRoot(clientPackageName: String, clientUid: Int,
                            rootHints: Bundle?): MediaBrowserServiceCompat.BrowserRoot? {
@@ -282,7 +284,7 @@ class MusicService : MediaBrowserServiceCompat() {
     }
 
     companion object {
-        private const val AVMP_USER_AGENT = "avmp.next"
+        const val AVMP_USER_AGENT = "avmp.next"
         private const val MAX_BROWSE_SIZE = 15
     }
 }
