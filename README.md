@@ -1,5 +1,6 @@
 # audioverse-android
-Android client app browsing the [AudioVerse](https://www.audioverse.org/) API
+Native Android client app browsing the [AudioVerse](https://www.audioverse.org/) API.<br/>
+A native Android experience while listening to your favorite sermons from AudioVerse.
 
 ## Screenshots 
 <img src="art/1.png" width="25%" /><img src="art/2.png" width="25%" /><img src="art/3.png" width="25%" /><img src="art/4.png" width="25%" />
@@ -12,14 +13,12 @@ This is not an official AudioVerse app, official source can be found [here](http
 ### You just want an apk?
 Get the latest release version [here](app/release/app-release.apk)
 
-## Playback
-This app doesn't have playback functionality yet but will allow you to stream the sermons via other music player apps like [Play Music](https://play.google.com/store/apps/details?id=com.google.android.music) or [VLC](https://play.google.com/store/apps/details?id=org.videolan.vlc)
-
 ## Technologies used
 * Kotlin
 * Retrofit
 * Android Architecture Components 
 * Dagger
+* Excerpts from [AUMP] (https://github.com/googlesamples/android-UniversalMusicPlayer)
 
 ## License
 
