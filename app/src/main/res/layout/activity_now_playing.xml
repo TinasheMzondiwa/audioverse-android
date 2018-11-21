@@ -129,6 +129,16 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <com.tinashe.audioverse.utils.custom.FadingSnackbar
+        android:id="@+id/snackbar"
+        android:layout_width="@dimen/snackbar_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_marginBottom="@dimen/snackbar_margin_bottom_bab"
+        android:layout_marginEnd="@dimen/snackbar_margin_end_fab"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
     <include layout="@layout/include_player_vew" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

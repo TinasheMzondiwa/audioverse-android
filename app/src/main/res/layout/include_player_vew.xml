@@ -1,72 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:layout_marginBottom="-1dp"
     android:background="@drawable/player_content_bg"
-    android:clipToPadding="false"
     android:elevation="6dp"
-    android:paddingStart="@dimen/spacing_medium"
-    android:paddingTop="@dimen/spacing_micro"
-    android:paddingEnd="@dimen/spacing_micro"
-    android:paddingBottom="@dimen/spacing_list"
+    android:orientation="vertical"
     android:translationZ="6dp">
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/playerThumbsUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="@dimen/spacing_medium"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="@dimen/spacing_micro"
-        android:src="@drawable/outline_thumb_up" />
+    <include layout="@layout/include_seekbar" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/playerPrevious"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_margin="@dimen/spacing_medium"
-        android:layout_toStartOf="@id/fab"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="@dimen/spacing_micro"
-        android:src="@drawable/ic_skip_previous" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/spacing_medium"
+        android:paddingTop="@dimen/spacing_micro"
+        android:paddingEnd="@dimen/spacing_micro"
+        android:paddingBottom="@dimen/spacing_list">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="@dimen/spacing_medium"
-        android:layout_marginEnd="@dimen/spacing_medium"
-        android:src="@drawable/ic_play"
-        app:fabCustomSize="64dp" />
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/playerThumbsUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/spacing_medium"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/spacing_micro"
+            android:src="@drawable/outline_thumb_up" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/playerNext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_margin="@dimen/spacing_medium"
-        android:layout_toEndOf="@id/fab"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="@dimen/spacing_micro"
-        android:src="@drawable/ic_skip_next" />
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/playerPrevious"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/spacing_medium"
+            android:layout_toStartOf="@id/fab"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/spacing_micro"
+            android:src="@drawable/ic_skip_previous" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/playerThumbsDown"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="@dimen/spacing_medium"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="@dimen/spacing_micro"
-        android:src="@drawable/outline_thumb_down" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:layout_marginEnd="@dimen/spacing_medium"
+            android:src="@drawable/ic_play"
+            app:fabCustomSize="64dp" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/playerNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/spacing_medium"
+            android:layout_toEndOf="@id/fab"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/spacing_micro"
+            android:src="@drawable/ic_skip_next" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/playerThumbsDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/spacing_medium"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/spacing_micro"
+            android:src="@drawable/outline_thumb_down" />
 
 
-</RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

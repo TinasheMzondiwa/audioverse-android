@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <dimen name="snackbar_width">@dimen/wrap_content</dimen>
+    <dimen name="snackbar_margin_end_fab">72dp</dimen>
+    <dimen name="snackbar_margin_bottom_fab">0dp</dimen>
+    <dimen name="snackbar_margin_bottom_bab">48dp</dimen>
+
+</resources>

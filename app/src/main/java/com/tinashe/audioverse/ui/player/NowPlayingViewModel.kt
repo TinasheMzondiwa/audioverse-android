@@ -159,6 +159,10 @@ class NowPlayingViewModel @Inject constructor(private val repository: AudioVerse
         disposables.add(disposable)
     }
 
+    fun seekToPosition(position: Long) {
+        mediaSessionConnection.transportControls.seekTo(position)
+    }
+
 
     private val subscriptionCallback = object : MediaBrowserCompat.SubscriptionCallback() {
         override fun onChildrenLoaded(parentId: String, children: List<MediaBrowserCompat.MediaItem>) {

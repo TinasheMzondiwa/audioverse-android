@@ -15,10 +15,15 @@ object Helper {
         if (duration.isEmpty()) {
             return ""
         }
-        val total = duration.toDouble()
-        val hours = total.div(3600).toInt()
-        val minutes = (total % 3600).div(60).toInt()
-        val seconds = (total % 60).toInt()
+
+        return formatDuration(duration.toDouble())
+    }
+
+    fun formatDuration(duration: Double): String {
+
+        val hours = duration.div(3600).toInt()
+        val minutes = (duration % 3600).div(60).toInt()
+        val seconds = (duration % 60).toInt()
 
         return String.format("%02d:%02d:%02d", hours, minutes, seconds)
     }

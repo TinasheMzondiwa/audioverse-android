@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">AudioVerse</string>
 
+    <string name="add_to_list">Add to List</string>
     <string name="blank"/>
+    <string name="coming_soon">Coming Soon! 😀</string>
     <string name="my_lists">My Lists</string>
     <string name="play">Play</string>
     <string name="presentations">Presentations</string>

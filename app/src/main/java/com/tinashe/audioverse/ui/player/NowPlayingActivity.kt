@@ -4,10 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.SystemClock
 import android.support.v4.media.session.PlaybackStateCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.SeekBar
 import androidx.lifecycle.Observer
 import com.google.android.material.appbar.AppBarLayout
 import com.tinashe.audioverse.R
@@ -25,6 +28,10 @@ import com.tinashe.audioverse.utils.custom.AppBarStateChangeListener
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_now_playing.*
 import kotlinx.android.synthetic.main.include_player_vew.*
+import kotlinx.android.synthetic.main.include_seekbar.*
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
@@ -37,6 +44,11 @@ class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
     private var shareMenuItem: MenuItem? = null
 
     private lateinit var relatedListAdapter: RelatedListAdapter
+
+    private val executorService = Executors.newSingleThreadScheduledExecutor()
+    private var scheduleFuture: ScheduledFuture<*>? = null
+    private val updateProgressTask = Runnable { updateProgress() }
+    private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +80,11 @@ class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
 
             playerPrevious.visibility = if (it.isSkipToPreviousEnabled) View.VISIBLE else View.INVISIBLE
             playerNext.visibility = if (it.isSkipToNextEnabled) View.VISIBLE else View.INVISIBLE
+
+            when (it.state) {
+                PlaybackStateCompat.STATE_PLAYING -> scheduleSeekBarUpdate()
+                else -> stopSeekBarUpdate()
+            }
         })
         viewModel.thumbedUp.observe(this, Observer { thumbedUp ->
 
@@ -107,6 +124,10 @@ class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
 
                     Helper.shareText(this, content)
                 }
+                true
+            }
+            R.id.action_add_to_list -> {
+                snackbar.show(messageId = R.string.coming_soon, longDuration = true)
                 true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -153,6 +174,30 @@ class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
 
         playerThumbsDown.setOnClickListener { viewModel.thumbDownMedia() }
         playerThumbsUp.setOnClickListener { viewModel.thumbUpMedia() }
+
+        playerSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            var userSelectedPosition = 0
+            var userIsSeeking = false
+
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    userSelectedPosition = progress
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                userIsSeeking = true
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                userIsSeeking = false
+
+                viewModel.seekToPosition(userSelectedPosition * PROGRESS_UPDATE_INTERNAL)
+            }
+        })
+        makeOfflinePin.setOnClickListener {
+            snackbar.show(messageId = R.string.coming_soon, longDuration = true)
+        }
     }
 
     override fun play(item: Recording) {
@@ -182,14 +227,73 @@ class NowPlayingActivity : BaseActivity(), RecordingHolder.MoreOptions {
         art.loadUrl(image, R.color.theme)
 
         recTitle.text = recording.title
-        presenterTxt.text = series?.title ?: presenter?.displayName
+        presenterTxt.text = if (series?.title?.isNotEmpty() == true) {
+            "${presenter?.displayName}\n${series.title}"
+        } else {
+            presenter?.displayName
+        }
         description.text = recording.description
+
+        trackProgressTime.text = Helper.formatDuration(0.0)
+        trackProgressEnd.text = Helper.formatDuration(recording.duration ?: "")
+        playerSeekBar.max = recording.duration?.toDouble()?.toInt() ?: 0
 
         viewModel.listRelated(recording)
     }
 
+    public override fun onDestroy() {
+        super.onDestroy()
+        stopSeekBarUpdate()
+        executorService.shutdown()
+    }
+
+    private fun stopSeekBarUpdate() {
+        scheduleFuture?.cancel(false)
+    }
+
+    private fun scheduleSeekBarUpdate() {
+        stopSeekBarUpdate()
+        if (!executorService.isShutdown) {
+            scheduleFuture = executorService.scheduleAtFixedRate(
+                    { handler.post(updateProgressTask) }, PROGRESS_UPDATE_INITIAL_INTERVAL,
+                    PROGRESS_UPDATE_INTERNAL, TimeUnit.MILLISECONDS)
+        }
+    }
+
+    private fun updateProgress() {
+
+        val playbackState: PlaybackStateCompat = viewModel.playbackState.value ?: return
+
+        var currentPosition = playbackState.position
+
+        if (playbackState.state != PlaybackStateCompat.STATE_PAUSED) {
+            // Calculate the elapsed time between the last position update and now and unless
+            // paused, we can assume (delta * speed) + current position is approximately the
+            // latest position. This ensures that we do not repeatedly call the getPlaybackState()
+            // on MediaControllerCompat.
+            val timeDelta = SystemClock.elapsedRealtime() - playbackState.lastPositionUpdateTime
+
+            currentPosition += (timeDelta * playbackState.playbackSpeed).toLong()
+
+        } else {
+            return
+        }
+
+        val seconds = currentPosition / PROGRESS_UPDATE_INTERNAL
+        playerSeekBar.progress = seconds.toInt()
+
+        val progress = Helper.formatDuration(seconds.toDouble())
+        if (progress.isNotEmpty()) {
+            trackProgressTime.text = progress
+        }
+    }
+
+
     companion object {
         private const val RECORDING = "arg:recording"
+
+        private const val PROGRESS_UPDATE_INTERNAL: Long = 1000
+        private const val PROGRESS_UPDATE_INITIAL_INTERVAL: Long = 100
 
         fun launch(context: Context, recording: Recording) {
             val intent = Intent(context, NowPlayingActivity::class.java)

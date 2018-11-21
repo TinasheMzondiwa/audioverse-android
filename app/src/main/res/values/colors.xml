@@ -10,5 +10,6 @@
     <color name="theme">#BF2000</color>
     <color name="icons">#989A9A</color>
     <color name="scrim">#99323232</color>
+    <color name="teal">#31e7b6</color>
 
 </resources>

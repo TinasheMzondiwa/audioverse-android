@@ -9,8 +9,8 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/link"
-        android:title="@string/search"
+        android:id="@+id/action.add.to.list"
+        android:title="@string/add_to_list"
         app:showAsAction="never" />
 
 </menu>
